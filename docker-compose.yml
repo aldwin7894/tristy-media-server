@@ -1,0 +1,66 @@
+version: "3.9"
+services:
+  shoko_server:
+    container_name: shokoserver
+    image: shokoanime/server:daily
+    restart: always
+    network_mode: service:tailscale
+    environment:
+      - "PUID=${UID}"
+      - "PGID=${GID}"
+      - TZ=Asia/Manila
+      - AVDUMP_MONO=true
+    volumes:
+      - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
+      - "${SHOKO_LIBRARY_DIR}:/mnt/Library"
+      - "${SHOKO_IMPORT_DIR}:/mnt/Importing"
+  jellyfin:
+    container_name: jellyfin
+    image: jellyfin/jellyfin
+    restart: "unless-stopped"
+    network_mode: service:tailscale
+    environment:
+      - "PUID=${UID}"
+      - "PGID=${GID}"
+      - TZ=Asia/Manila
+      - JELLYFIN_CACHE_DIR=/config/cache
+      - JELLYFIN_CONFIG_DIR=/config/config
+      - JELLYFIN_DATA_DIR=/config
+      - JELLYFIN_LOG_DIR=/config/log
+    volumes:
+      - "${JELLYFIN_ROOT_DIR}:/config"
+      - "${JELLYFIN_ANIME_DIR}:/anime"
+      - "${JELLYFIN_MUSIC_DIR}:/music"
+  caddy:
+    container_name: caddy
+    image:  alexandzors/caddy:latest
+    restart: unless-stopped
+    network_mode: service:tailscale
+    environment:
+      - "PUID=${UID}"
+      - "PGID=${GID}"
+      - TZ=Asia/Manila
+    volumes:
+      - "${CADDYFILE}:/etc/caddy/Caddyfile:ro"
+      - "${CADDY_DATA_DIR}:/data"
+      - "${CADDY_CONFIG_DIR}:/config"
+      - "${CADDY_LOG_DIR}:/logs"
+  tailscale:
+    container_name: tristy-tailcale
+    hostname: tristy-tailscale
+    image: tailscale/tailscale:latest
+    ports:
+      - 8096:8096
+      - 8920:8920
+      - 7359:7359/udp
+      - 1900:1900/udp
+      - "8111:8111"
+      - "80:80"
+      - "443:443"
+    volumes:
+        - "${TAILSCALE_ROOT_DIR}:/var/lib"
+        - "/dev/net/tun:/dev/net/tun"
+    cap_add:
+      - net_admin
+      - sys_module
+    command: tailscaled
