@@ -1,9 +1,9 @@
 version: "3.9"
 services:
   shoko_server:
-    container_name: shokoserver
+    container_name: shoko-server
     image: shokoanime/server:daily
-    restart: always
+    restart: unless-stopped
     network_mode: service:tailscale
     environment:
       - "PUID=${UID}"
@@ -17,7 +17,7 @@ services:
   jellyfin:
     container_name: jellyfin
     image: jellyfin/jellyfin
-    restart: "unless-stopped"
+    restart: unless-stopped
     network_mode: service:tailscale
     environment:
       - "PUID=${UID}"
@@ -27,6 +27,8 @@ services:
       - JELLYFIN_CONFIG_DIR=/config/config
       - JELLYFIN_DATA_DIR=/config
       - JELLYFIN_LOG_DIR=/config/log
+      - JELLYFIN_WEB_DIR=/config/jellyfin-web
+      - JELLYFIN_FFMPEG=/config/jellyfin-ffmpeg/ffmpeg
     volumes:
       - "${JELLYFIN_ROOT_DIR}:/config"
       - "${JELLYFIN_ANIME_DIR}:/anime"
@@ -46,9 +48,10 @@ services:
       - "${CADDY_CONFIG_DIR}:/config"
       - "${CADDY_LOG_DIR}:/logs"
   tailscale:
-    container_name: tristy-tailcale
+    container_name: tristy-tailscale
     hostname: tristy-tailscale
     image: tailscale/tailscale:latest
+    restart: unless-stopped
     ports:
       - 8096:8096
       - 8920:8920
