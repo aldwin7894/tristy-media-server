@@ -12,13 +12,16 @@ services:
       - AVDUMP_MONO=true
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
-      - "${SHOKO_LIBRARY_DIR}:/mnt/Library"
-      - "${SHOKO_IMPORT_DIR}:/mnt/Importing"
+      - "${ANIME_LIBRARY_DIR}:/mnt/Library"
+      - "${ANIME_IMPORT_DIR}:/mnt/Importing"
   jellyfin:
     container_name: jellyfin
     image: jellyfin/jellyfin
     restart: unless-stopped
     network_mode: service:tailscale
+    privileged: true
+    devices:
+      - "/dev:/dev"
     environment:
       - "PUID=${UID}"
       - "PGID=${GID}"
@@ -31,8 +34,8 @@ services:
       - JELLYFIN_FFMPEG=/config/jellyfin-ffmpeg/ffmpeg
     volumes:
       - "${JELLYFIN_ROOT_DIR}:/config"
-      - "${JELLYFIN_ANIME_DIR}:/anime"
-      - "${JELLYFIN_MUSIC_DIR}:/music"
+      - "${ANIME_LIBRARY_DIR}:/anime"
+      - "${MUSIC_LIBRARY_DIR}:/music"
   caddy:
     container_name: caddy
     image:  alexandzors/caddy:latest
@@ -58,8 +61,6 @@ services:
       - 7359:7359/udp
       - 1900:1900/udp
       - "8111:8111"
-      - "80:80"
-      - "443:443"
     volumes:
         - "${TAILSCALE_ROOT_DIR}:/var/lib"
         - "/dev/net/tun:/dev/net/tun"
