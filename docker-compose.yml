@@ -15,7 +15,7 @@ services:
       - "${ANIME_ROOT_DIR}:/mnt"
   jellyfin:
     container_name: jellyfin
-    image: jellyfin/jellyfin
+    image: lscr.io/linuxserver/jellyfin
     restart: unless-stopped
     network_mode: service:tailscale
     privileged: true
