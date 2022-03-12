@@ -6,6 +6,8 @@ UID=""                    # user id
 GID=""                    # group id
 
 JELLYFIN_ROOT_DIR=""      # jellyfin root dir
+JELLYFIN_WEB_DIR=""       # test pre-release
+JELLYFIN_FFMPEG_DIR=""    # test pre-release
 
 SHOKO_ROOT_DIR=""         # shoko server root dir
 

@@ -27,16 +27,10 @@ services:
       - "PUID=${UID}"
       - "PGID=${GID}"
       - TZ=Asia/Manila
-      - JELLYFIN_CACHE_DIR=/config/cache
-      - JELLYFIN_CONFIG_DIR=/config/config
-      - JELLYFIN_DATA_DIR=/config
-      - JELLYFIN_LOG_DIR=/config/log
-      - JELLYFIN_WEB_DIR=/config/jellyfin-web
-      # - JELLYFIN_FFMPEG=/config/jellyfin-ffmpeg/ffmpeg
-      # - LIBVA_DRIVERS_PATH=/config/jellyfin-ffmpeg/lib/dri
-      # - LIBVA_DRIVER_NAME=i965
     volumes:
       - "${JELLYFIN_ROOT_DIR}:/config"
+      - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
+      - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
       - "${ANIME_LIBRARY_DIR}:/anime"
       - "${MUSIC_LIBRARY_DIR}:/music"
   caddy:
