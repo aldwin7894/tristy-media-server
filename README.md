@@ -16,8 +16,8 @@ CADDY_LOG_DIR=""          # caddy log dir
 
 TAILSCALE_ROOT_DIR=""     # tailscale root dir
 
+ANIME_ROOT_DIR=""         # anime root dir containing library and importing
 ANIME_LIBRARY_DIR=""      # anime library dir
-ANIME_IMPORT_DIR=""       # anime to be imported dir
 MUSIC_LIBRARY_DIR=""      # music dir
 ```
 
