@@ -60,7 +60,6 @@ services:
       - 8096:8096
       - 8111:8111
       - 8920:8920
-      - 9443:9443
       - 19999:19999
     volumes:
       - "${TAILSCALE_ROOT_DIR}:/var/lib"
