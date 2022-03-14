@@ -4,7 +4,8 @@ services:
     container_name: shoko-server
     image: shokoanime/server:daily
     restart: unless-stopped
-    network_mode: service:tailscale
+    ports:
+      - 8111:8111
     environment:
       - PUID
       - PGID
@@ -17,7 +18,11 @@ services:
     container_name: jellyfin
     image: lscr.io/linuxserver/jellyfin
     restart: unless-stopped
-    network_mode: service:tailscale
+    ports:
+      - 1900:1900/udp
+      - 7359:7359/udp
+      - 8000:8000
+      - 8096:8096
     privileged: true
     group_add:
       - "122"
@@ -53,14 +58,7 @@ services:
     hostname: tristy-tailscale
     image: tailscale/tailscale:latest
     restart: unless-stopped
-    ports:
-      - 1900:1900/udp
-      - 7359:7359/udp
-      - 8000:8000
-      - 8096:8096
-      - 8111:8111
-      - 8920:8920
-      - 19999:19999
+    network_mode: host
     volumes:
       - "${TAILSCALE_ROOT_DIR}:/var/lib"
       - /dev/net/tun:/dev/net/tun
@@ -86,7 +84,8 @@ services:
     container_name: netdata
     image: netdata/netdata:latest
     privileged: true
-    network_mode: service:tailscale
+    ports:
+      - 19999:19999
     environment:
       - TZ
       - PGID=998
