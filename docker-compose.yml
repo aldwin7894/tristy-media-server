@@ -69,18 +69,6 @@ services:
       - net_admin
       - sys_module
     command: tailscaled
-  portainer:
-    container_name: portainer
-    image: portainer/portainer-ce:latest
-    network_mode: service:tailscale
-    environment:
-      - TZ
-    command: --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-      - "${PORTAINER_CERTS_DIR}:/certs"
-    restart: always
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
