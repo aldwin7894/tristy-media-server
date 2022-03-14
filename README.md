@@ -2,25 +2,41 @@
 
 #### ENV vars
 ```bash
-UID=""                    # user id
-GID=""                    # group id
+PUID=""                   # USER ID
+PGID=""                   # GROUP ID
+TZ=""                     # TIMEZONE
 
-JELLYFIN_ROOT_DIR=""      # jellyfin root dir
-JELLYFIN_WEB_DIR=""       # test pre-release
-JELLYFIN_FFMPEG_DIR=""    # test pre-release
+ANIME_ROOT_DIR=""         # ANIME ROOT DIR CONTAINING DROP SOURCE AND DESTINATION
+ANIME_LIBRARY_DIR=""      # ANIME LIBRARY DIR
+MUSIC_LIBRARY_DIR=""      # MUSIC LIBRARY DIR
+VIDEO_ROOT_DIR=""         # VIDEO ROOT DIR
 
-SHOKO_ROOT_DIR=""         # shoko server root dir
+SHOKO_ROOT_DIR=""         # SHOKO SERVER ROOT DIR
 
-CADDYFILE=""              # caddy config file
-CADDY_DATA_DIR=""         # caddy data dir
-CADDY_CONFIG_DIR=""       # caddy config dir
-CADDY_LOG_DIR=""          # caddy log dir
+JELLYFIN_ROOT_DIR=""      # JELLYFIN ROOT DIR
+JELLYFIN_WEB_DIR=""       # TEST PRE-RELEASE WEB
+JELLYFIN_FFMPEG_DIR=""    # TEST PRE-RELEASE FFMPEG
 
-TAILSCALE_ROOT_DIR=""     # tailscale root dir
+CADDYFILE=""              # CADDY CONFIG FILE
+CADDY_DATA_DIR=""         # CADDY DATA DIR
+CADDY_CONFIG_DIR=""       # CADDY CONFIG DIR
 
-ANIME_ROOT_DIR=""         # anime root dir containing library and importing
-ANIME_LIBRARY_DIR=""      # anime library dir
-MUSIC_LIBRARY_DIR=""      # music dir
+TAILSCALE_ROOT_DIR=""     # TAILSCALE ROOT DIR
+
+SONARR_ROOT_DIR=""
+
+PORTAINER_CERTS_DIR=""
+
+PIHOLE_WEBPASSWORD=""
+PIHOLE_ROOT_DIR=""
+PIHOLE_DNSMASQ_DIR=""
+
+NETDATA_CLAIM_TOKEN=""
+NETDATA_CLAIM_URL=""
+NETDATA_CLAIM_ROOMS=""
+NETDATA_CONFIG_DIR=""
+NETDATA_LIB_DIR=""
+NETDATA_CACHE_DIR=""
 ```
 
 ```bash

@@ -6,9 +6,9 @@ services:
     restart: unless-stopped
     network_mode: service:tailscale
     environment:
-      - "PUID=${UID}"
-      - "PGID=${GID}"
-      - TZ=Asia/Manila
+      - PUID
+      - PGID
+      - TZ
       - AVDUMP_MONO=true
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
@@ -24,9 +24,9 @@ services:
     devices:
       - /dev/dri:/dev/dri
     environment:
-      - "PUID=${UID}"
-      - "PGID=${GID}"
-      - TZ=Asia/Manila
+      - PUID
+      - PGID
+      - TZ
     volumes:
       - "${JELLYFIN_ROOT_DIR}:/config"
       - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
@@ -54,15 +54,86 @@ services:
     image: tailscale/tailscale:latest
     restart: unless-stopped
     ports:
-      - 8096:8096
-      - 8920:8920
-      - 7359:7359/udp
       - 1900:1900/udp
-      - "8111:8111"
+      - 7359:7359/udp
+      - 8000:8000
+      - 8096:8096
+      - 8111:8111
+      - 8920:8920
+      - 9443:9443
+      - 19999:19999
     volumes:
       - "${TAILSCALE_ROOT_DIR}:/var/lib"
-      - "/dev/net/tun:/dev/net/tun"
+      - /dev/net/tun:/dev/net/tun
     cap_add:
       - net_admin
       - sys_module
     command: tailscaled
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+    network_mode: service:tailscale
+    environment:
+      - TZ
+    command: --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+      - "${PORTAINER_CERTS_DIR}:/certs"
+    restart: always
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    privileged: true
+    network_mode: host
+    environment:
+      - TZ
+      - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
+    volumes:
+      - "${PIHOLE_ROOT_DIR}:/etc/pihole"
+      - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+  netdata:
+    container_name: netdata
+    image: netdata/netdata:latest
+    privileged: true
+    network_mode: service:tailscale
+    environment:
+      - TZ
+      - PGID=998
+      - NETDATA_CLAIM_TOKEN
+      - NETDATA_CLAIM_URL
+      - NETDATA_CLAIM_ROOMS
+    volumes:
+      - "${NETDATA_CONFIG_DIR}:/etc/netdata"
+      - "${NETDATA_LIB_DIR}:/var/lib/netdata"
+      - "${NETDATA_CACHE_DIR}:/var/cache/netdata"
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-releaase:/host/etc/os-release:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    restart: unless-stopped
+  # sonarr:
+  #   image: lscr.io/linuxserver/sonarr:latest
+  #   container_name: sonarr
+  #   environment:
+  #     - "PUID=${UID}"
+  #     - "PGID=${GID}"
+  #     - TZ=Asia/Manila
+  #   volumes:
+  #     - "${SONARR_ROOT_DIR}:/config"
+  #     - "${VIDEO_ROOT_DIR}:/data"
+  #   ports:
+  #     - 8989:8989
+  #   restart: unless-stopped
+
+volumes:
+  portainer_data:
