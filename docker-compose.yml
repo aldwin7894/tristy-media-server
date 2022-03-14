@@ -38,21 +38,6 @@ services:
       - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
       - "${ANIME_LIBRARY_DIR}:/anime"
       - "${MUSIC_LIBRARY_DIR}:/music"
-  caddy:
-    container_name: caddy
-    image: alexandzors/caddy:latest
-    restart: unless-stopped
-    network_mode: service:tailscale
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "5m"
-        max-file: "2"
-        compress: "true"
-    volumes:
-      - "${CADDYFILE}:/etc/caddy/Caddyfile:ro"
-      - "${CADDY_DATA_DIR}:/data"
-      - "${CADDY_CONFIG_DIR}:/config"
   tailscale:
     container_name: tristy-tailscale
     hostname: tristy-tailscale
@@ -120,3 +105,18 @@ services:
   #   ports:
   #     - 8989:8989
   #   restart: unless-stopped
+  # caddy:
+  #   container_name: caddy
+  #   image: alexandzors/caddy:latest
+  #   restart: unless-stopped
+  #   network_mode: service:tailscale
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "5m"
+  #       max-file: "2"
+  #       compress: "true"
+  #   volumes:
+  #     - "${CADDYFILE}:/etc/caddy/Caddyfile:ro"
+  #     - "${CADDY_DATA_DIR}:/data"
+  #     - "${CADDY_CONFIG_DIR}:/config"
