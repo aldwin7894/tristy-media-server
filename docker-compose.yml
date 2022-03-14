@@ -35,18 +35,19 @@ services:
       - "${MUSIC_LIBRARY_DIR}:/music"
   caddy:
     container_name: caddy
-    image:  alexandzors/caddy:latest
+    image: alexandzors/caddy:latest
     restart: unless-stopped
     network_mode: service:tailscale
-    environment:
-      - "PUID=${UID}"
-      - "PGID=${GID}"
-      - TZ=Asia/Manila
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+        compress: "true"
     volumes:
       - "${CADDYFILE}:/etc/caddy/Caddyfile:ro"
       - "${CADDY_DATA_DIR}:/data"
       - "${CADDY_CONFIG_DIR}:/config"
-      - "${CADDY_LOG_DIR}:/logs"
   tailscale:
     container_name: tristy-tailscale
     hostname: tristy-tailscale
@@ -59,8 +60,8 @@ services:
       - 1900:1900/udp
       - "8111:8111"
     volumes:
-        - "${TAILSCALE_ROOT_DIR}:/var/lib"
-        - "/dev/net/tun:/dev/net/tun"
+      - "${TAILSCALE_ROOT_DIR}:/var/lib"
+      - "/dev/net/tun:/dev/net/tun"
     cap_add:
       - net_admin
       - sys_module
