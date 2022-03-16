@@ -93,7 +93,7 @@ services:
       - apparmor:unconfined
     restart: unless-stopped
   gonic:
-    image: sentriz/gonic:latest
+    image: sentriz/gonic:nightly
     environment:
       - TZ
       - PGID
