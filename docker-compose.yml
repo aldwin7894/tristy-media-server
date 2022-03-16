@@ -92,6 +92,26 @@ services:
     security_opt:
       - apparmor:unconfined
     restart: unless-stopped
+  gonic:
+    image: sentriz/gonic:latest
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - GONIC_GENRE_SPLIT=;
+      - GONIC_SCAN_INTERVAL=120
+    ports:
+      - 8097:80
+      - 4747:4747
+    volumes:
+      - "${GONIC_ROOT_DIR}:/data"
+      - "${MUSIC_LIBRARY_DIR}:/music:ro"
+      - "${GONIC_CACHE_DIR}:/cache"
+    group_add:
+      - audio
+    devices:
+      - /dev/snd:/dev/snd
+    restart: unless-stopped
   # sonarr:
   #   image: lscr.io/linuxserver/sonarr:latest
   #   container_name: sonarr
