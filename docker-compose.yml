@@ -93,6 +93,7 @@ services:
       - apparmor:unconfined
     restart: unless-stopped
   gonic:
+    container_name: gonic
     image: sentriz/gonic:nightly
     environment:
       - TZ
