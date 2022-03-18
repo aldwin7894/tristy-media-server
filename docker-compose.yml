@@ -51,7 +51,7 @@ services:
     cap_add:
       - net_admin
       - sys_module
-    command: tailscaled --accept-dns=false
+    command: tailscaled
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
