@@ -32,6 +32,7 @@ services:
       - PUID
       - PGID
       - TZ
+      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
     volumes:
       - "${JELLYFIN_ROOT_DIR}:/config"
       - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
