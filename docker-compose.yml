@@ -56,12 +56,27 @@ services:
   pihole:
     container_name: pihole
     image: pihole/pihole:nightly
+    hostname: pihole
+    domainname: local
+    mac_address: de:ad:be:ef:ff:01
     privileged: true
-    network_mode: host
+    networks:
+      macvlan0:
+        ipv4_address: ${PIHOLE_MACVLAN_IP}
+    dns:
+      - 127.0.0.1
+    ports:
+      - 443/tcp
+      - 53/tcp
+      - 53/udp
+      - 67/udp
+      - 80/udp
     environment:
       - TZ
       - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
       - DNSMASQ_USER=root
+      - ServerIP=${PIHOLE_MACVLAN_IP}
+      - VIRTUAL_HOST=pihole.local
     volumes:
       - "${PIHOLE_ROOT_DIR}:/etc/pihole"
       - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
@@ -144,3 +159,7 @@ services:
   #     - "${CADDYFILE}:/etc/caddy/Caddyfile:ro"
   #     - "${CADDY_DATA_DIR}:/data"
   #     - "${CADDY_CONFIG_DIR}:/config"
+
+networks:
+  macvlan0:
+    external: true
