@@ -40,8 +40,8 @@ services:
       - "${ANIME_LIBRARY_DIR}:/anime"
       - "${MUSIC_LIBRARY_DIR}:/music"
   tailscale:
-    container_name: tristy-tailscale
-    hostname: tristy-tailscale
+    container_name: tailscale
+    hostname: tailscale
     image: tailscale/tailscale:latest
     restart: unless-stopped
     network_mode: host
@@ -55,7 +55,7 @@ services:
     command: tailscaled
   pihole:
     container_name: pihole
-    image: pihole/pihole:latest
+    image: pihole/pihole:nightly
     privileged: true
     network_mode: host
     environment:
