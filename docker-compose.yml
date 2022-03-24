@@ -61,6 +61,7 @@ services:
     environment:
       - TZ
       - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
+      - DNSMASQ_USER=root
     volumes:
       - "${PIHOLE_ROOT_DIR}:/etc/pihole"
       - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
