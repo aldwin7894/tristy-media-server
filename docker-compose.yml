@@ -16,7 +16,7 @@ services:
       - "${ANIME_ROOT_DIR}:/mnt"
   jellyfin:
     container_name: jellyfin
-    image: lscr.io/linuxserver/jellyfin
+    image: linuxserver/jellyfin:latest
     restart: unless-stopped
     ports:
       - 1900:1900/udp
@@ -82,6 +82,18 @@ services:
       - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
     cap_add:
       - NET_ADMIN
+    restart: unless-stopped
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:latest
+    networks:
+      macvlan0:
+        ipv4_address: ${UNBOUND_MACVLAN_IP}
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+    volumes:
+      - "${UNBOUND_ROOT_DIR}:/opt/unbound/etc/unbound"
     restart: unless-stopped
   netdata:
     container_name: netdata
