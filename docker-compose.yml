@@ -82,7 +82,7 @@ services:
       - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
     cap_add:
       - NET_ADMIN
-    restart: unless-stopped
+    restart: always
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
@@ -92,9 +92,10 @@ services:
     ports:
       - 53:53/tcp
       - 53:53/udp
+      - 8953:8953/tcp
     volumes:
       - "${UNBOUND_ROOT_DIR}:/opt/unbound/etc/unbound"
-    restart: unless-stopped
+    restart: always
   netdata:
     container_name: netdata
     image: netdata/netdata:latest
