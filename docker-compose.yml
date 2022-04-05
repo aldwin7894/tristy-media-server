@@ -55,7 +55,7 @@ services:
     command: tailscaled
   pihole:
     container_name: pihole
-    image: pihole/pihole:nightly
+    image: pihole/pihole:2022.04.1
     hostname: pihole
     domainname: local
     mac_address: de:ad:be:ef:ff:01
@@ -64,7 +64,7 @@ services:
       macvlan0:
         ipv4_address: ${PIHOLE_MACVLAN_IP}
     dns:
-      - 127.0.0.1
+      - "${UNBOUND_MACVLAN_IP}"
     ports:
       - 443/tcp
       - 53/tcp
@@ -74,14 +74,11 @@ services:
     environment:
       - TZ
       - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
-      - DNSMASQ_USER=root
       - ServerIP=${PIHOLE_MACVLAN_IP}
       - VIRTUAL_HOST=pihole.local
     volumes:
       - "${PIHOLE_ROOT_DIR}:/etc/pihole"
       - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
-    cap_add:
-      - NET_ADMIN
     restart: always
   unbound:
     container_name: unbound
