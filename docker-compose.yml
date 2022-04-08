@@ -55,7 +55,7 @@ services:
     command: tailscaled
   pihole:
     container_name: pihole
-    image: pihole/pihole:2022.04.1
+    image: pihole/pihole:2022.04.2
     hostname: pihole
     domainname: local
     mac_address: de:ad:be:ef:ff:01
