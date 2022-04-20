@@ -140,19 +140,19 @@ services:
     devices:
       - /dev/snd:/dev/snd
     restart: unless-stopped
-  # sonarr:
-  #   image: lscr.io/linuxserver/sonarr:latest
-  #   container_name: sonarr
-  #   environment:
-  #     - "PUID=${UID}"
-  #     - "PGID=${GID}"
-  #     - TZ=Asia/Manila
-  #   volumes:
-  #     - "${SONARR_ROOT_DIR}:/config"
-  #     - "${VIDEO_ROOT_DIR}:/data"
-  #   ports:
-  #     - 8989:8989
-  #   restart: unless-stopped
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    volumes:
+      - "${SONARR_ROOT_DIR}:/config"
+      - "${VIDEO_ROOT_DIR}:/data"
+    ports:
+      - 8989:8989
+    restart: unless-stopped
   # caddy:
   #   container_name: caddy
   #   image: alexandzors/caddy:latest
