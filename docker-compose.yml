@@ -148,26 +148,28 @@ services:
       - PGID
       - PUID
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - "${SONARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
     ports:
       - 8989:8989
     restart: unless-stopped
-  # caddy:
-  #   container_name: caddy
-  #   image: alexandzors/caddy:latest
-  #   restart: unless-stopped
-  #   network_mode: service:tailscale
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "5m"
-  #       max-file: "2"
-  #       compress: "true"
-  #   volumes:
-  #     - "${CADDYFILE}:/etc/caddy/Caddyfile:ro"
-  #     - "${CADDY_DATA_DIR}:/data"
-  #     - "${CADDY_CONFIG_DIR}:/config"
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - WEBUI_PORT=8080
+    volumes:
+      - "${QBITTORRENT_ROOT_DIR}:/config"
+      - "${VIDEO_ROOT_DIR}:/data"
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
 
 networks:
   macvlan0:

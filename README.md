@@ -42,6 +42,8 @@ NETDATA_CACHE_DIR=""
 
 GONIC_ROOT_DIR=""
 GONIC_CACHE_DIR=""
+
+QBITTORRENT_ROOT_DIR=""
 ```
 
 #### macvlan for PiHole
