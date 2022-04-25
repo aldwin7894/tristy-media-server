@@ -43,10 +43,10 @@ services:
     container_name: jellyfin-beta
     image: jellyfin/jellyfin:10.8.0-beta2
     ports:
-      - 1900:1900/udp
-      - 7359:7359/udp
-      - 8000:8000
-      - 8096:8096
+      - 1901:1900/udp
+      - 7360:7359/udp
+      - 8001:8000
+      - 8095:8096
     privileged: true
     devices:
       - /dev/dri:/dev/dri
@@ -55,7 +55,7 @@ services:
       - PGID
       - TZ
       - JELLYFIN_CACHE_DIR=/config/cache
-      - JELLYFIN_CONFIG_DIR=/config/config
+      - JELLYFIN_CONFIG_DIR=/config/jellyfin-data
       - JELLYFIN_DATA_DIR=/config
       - JELLYFIN_LOG_DIR=/config/log
       - JELLYFIN_WEB_DIR=/config/jellyfin-web
