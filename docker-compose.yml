@@ -134,6 +134,7 @@ services:
     volumes:
       - "${GONIC_ROOT_DIR}:/data"
       - "${MUSIC_LIBRARY_DIR}:/music:ro"
+      - "${PODCAST_ROOT_DIR}:/podcasts:ro"
       - "${GONIC_CACHE_DIR}:/cache"
     group_add:
       - audio
@@ -148,7 +149,6 @@ services:
       - PGID
       - PUID
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - "${SONARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
     ports:
