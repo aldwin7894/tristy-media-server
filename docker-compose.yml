@@ -43,10 +43,10 @@ services:
     container_name: jellyfin
     image: jellyfin/jellyfin:10.8.0-beta2
     ports:
-      - 1901:1900/udp
-      - 7360:7359/udp
-      - 8001:8000
-      - 8095:8096
+      - 1900:1900/udp
+      - 7359:7359/udp
+      - 8000:8000
+      - 8096:8096
     privileged: true
     devices:
       - /dev/dri:/dev/dri
@@ -62,6 +62,7 @@ services:
       - JELLYFIN_FFMPEG_DIR:/config/jellyfin-ffmpeg
     volumes:
       - "${JELLYFIN_BETA_ROOT_DIR}:/config"
+      - "${JELLYFIN_BETA_CACHE_DIR}:/cache"
       - "${ANIME_LIBRARY_DIR}:/anime"
       - "${MUSIC_LIBRARY_DIR}:/music"
   tailscale:
