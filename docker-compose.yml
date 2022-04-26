@@ -14,33 +14,33 @@ services:
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
       - "${ANIME_ROOT_DIR}:/mnt"
+  # jellyfin:
+  #   container_name: jellyfin
+  #   image: linuxserver/jellyfin:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - 1900:1900/udp
+  #     - 7359:7359/udp
+  #     - 8000:8000
+  #     - 8096:8096
+  #   privileged: true
+  #   group_add:
+  #     - "122"
+  #   devices:
+  #     - /dev/dri:/dev/dri
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #     - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
+  #   volumes:
+  #     - "${JELLYFIN_ROOT_DIR}:/config"
+  #     - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
+  #     - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
+  #     - "${ANIME_LIBRARY_DIR}:/anime"
+  #     - "${MUSIC_LIBRARY_DIR}:/music"
   jellyfin:
     container_name: jellyfin
-    image: linuxserver/jellyfin:latest
-    restart: unless-stopped
-    ports:
-      - 1900:1900/udp
-      - 7359:7359/udp
-      - 8000:8000
-      - 8096:8096
-    privileged: true
-    group_add:
-      - "122"
-    devices:
-      - /dev/dri:/dev/dri
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
-    volumes:
-      - "${JELLYFIN_ROOT_DIR}:/config"
-      - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
-      - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
-      - "${ANIME_LIBRARY_DIR}:/anime"
-      - "${MUSIC_LIBRARY_DIR}:/music"
-  jellyfin_beta:
-    container_name: jellyfin-beta
     image: jellyfin/jellyfin:10.8.0-beta2
     ports:
       - 1901:1900/udp
