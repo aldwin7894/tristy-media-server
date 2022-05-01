@@ -39,6 +39,32 @@ services:
       - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
       - "${ANIME_LIBRARY_DIR}:/anime"
       - "${MUSIC_LIBRARY_DIR}:/music"
+  # jellyfin:
+  #   container_name: jellyfin
+  #   image: jellyfin/jellyfin:10.8.0-beta2
+  #   ports:
+  #     - 1900:1900/udp
+  #     - 7359:7359/udp
+  #     - 8000:8000
+  #     - 8096:8096
+  #   privileged: true
+  #   devices:
+  #     - /dev/dri:/dev/dri
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #     - JELLYFIN_CACHE_DIR=/config/cache
+  #     - JELLYFIN_CONFIG_DIR=/config/jellyfin-data
+  #     - JELLYFIN_DATA_DIR=/config
+  #     - JELLYFIN_LOG_DIR=/config/log
+  #     - JELLYFIN_WEB_DIR=/config/jellyfin-web
+  #     - JELLYFIN_FFMPEG_DIR:/config/jellyfin-ffmpeg
+  #   volumes:
+  #     - "${JELLYFIN_BETA_ROOT_DIR}:/config"
+  #     - "${JELLYFIN_BETA_CACHE_DIR}:/cache"
+  #     - "${ANIME_LIBRARY_DIR}:/anime"
+  #     - "${MUSIC_LIBRARY_DIR}:/music"
   tailscale:
     container_name: tailscale
     hostname: tailscale
@@ -55,33 +81,28 @@ services:
     command: tailscaled
   pihole:
     container_name: pihole
-    image: pihole/pihole:latest
+    image: pihole/pihole:2022.04.3
     hostname: pihole
     domainname: local
     mac_address: de:ad:be:ef:ff:01
-    privileged: true
     networks:
       macvlan0:
         ipv4_address: ${PIHOLE_MACVLAN_IP}
     dns:
-      - 127.0.0.1
+      - "${UNBOUND_MACVLAN_IP}"
     ports:
       - 443/tcp
       - 53/tcp
       - 53/udp
-      - 67/udp
       - 80/udp
     environment:
       - TZ
       - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
-      - DNSMASQ_USER=root
       - ServerIP=${PIHOLE_MACVLAN_IP}
       - VIRTUAL_HOST=pihole.local
     volumes:
       - "${PIHOLE_ROOT_DIR}:/etc/pihole"
       - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
-    cap_add:
-      - NET_ADMIN
     restart: always
   unbound:
     container_name: unbound
@@ -98,7 +119,7 @@ services:
     restart: always
   netdata:
     container_name: netdata
-    image: netdata/netdata:latest
+    image: netdata/netdata:stable
     privileged: true
     ports:
       - 19999:19999
@@ -139,40 +160,75 @@ services:
     volumes:
       - "${GONIC_ROOT_DIR}:/data"
       - "${MUSIC_LIBRARY_DIR}:/music:ro"
+      - "${PODCAST_ROOT_DIR}:/podcasts:ro"
       - "${GONIC_CACHE_DIR}:/cache"
     group_add:
       - audio
     devices:
       - /dev/snd:/dev/snd
     restart: unless-stopped
-  # sonarr:
-  #   image: lscr.io/linuxserver/sonarr:latest
-  #   container_name: sonarr
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    volumes:
+      - "${SONARR_ROOT_DIR}:/config"
+      - "${VIDEO_ROOT_DIR}:/data"
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - WEBUI_PORT=8080
+    volumes:
+      - "${QBITTORRENT_ROOT_DIR}:/config"
+      - "${VIDEO_ROOT_DIR}:/data"
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+  # guacamole:
+  #   image: maxwaldorf/guacamole:latest
+  #   container_name: guacamole
   #   environment:
-  #     - "PUID=${UID}"
-  #     - "PGID=${GID}"
-  #     - TZ=Asia/Manila
-  #   volumes:
-  #     - "${SONARR_ROOT_DIR}:/config"
-  #     - "${VIDEO_ROOT_DIR}:/data"
+  #     - TZ
+  #     - PGID
+  #     - PUID
+  #     - EXTENSIONS=auth-quickconnect,auth-jdbc-postgresql
   #   ports:
-  #     - 8989:8989
-  #   restart: unless-stopped
-  # caddy:
-  #   container_name: caddy
-  #   image: alexandzors/caddy:latest
-  #   restart: unless-stopped
-  #   network_mode: service:tailscale
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "5m"
-  #       max-file: "2"
-  #       compress: "true"
+  #     - 8888:8080
   #   volumes:
-  #     - "${CADDYFILE}:/etc/caddy/Caddyfile:ro"
-  #     - "${CADDY_DATA_DIR}:/data"
-  #     - "${CADDY_CONFIG_DIR}:/config"
+  #     - /home/aldwin7894/guacamole:/config
+  #   restart: unless-stopped
+  meshcentral:
+    image: ghcr.io/gurucomputing/meshcentral-docker:latest
+    container_name: meshcentral
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - MONGODB_URL=${MONGODB_URL}
+      - MONGODB_NAME=meshcentral
+      - DB_ENCRYPT_KEY=${DB_ENCRYPT_KEY}
+      - AGENT_PORT=8800
+    ports:
+      - 8800:8800
+      - 8888:80
+      - 9999:443
+    volumes:
+      - "${MESHCENTRAL_DATA_DIR}:/meshcentral/meshcentral-data"
+      - "${MESHCENTRAL_FILES_DIR}:/meshcentral/meshcentral-files"
+      - "${MESHCENTRAL_BACKUP_DIR}:/meshcentral/meshcentral-backup"
+    restart: always
 
 networks:
   macvlan0:
