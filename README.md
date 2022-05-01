@@ -45,6 +45,9 @@ GONIC_ROOT_DIR=""
 GONIC_CACHE_DIR=""
 
 QBITTORRENT_ROOT_DIR=""
+
+DIUN_DATA_DIR=""
+DIUN_CONFIG_FILE=""
 ```
 
 #### macvlan for PiHole

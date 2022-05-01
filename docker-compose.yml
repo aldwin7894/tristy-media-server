@@ -14,18 +14,19 @@ services:
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
       - "${ANIME_ROOT_DIR}:/mnt"
+    labels:
+      - "diun.enable=true"
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin:latest
+    depends_on:
+      - shoko_server
     restart: unless-stopped
     ports:
       - 1900:1900/udp
       - 7359:7359/udp
       - 8000:8000
       - 8096:8096
-    privileged: true
-    group_add:
-      - "122"
     devices:
       - /dev/dri:/dev/dri
     environment:
@@ -39,6 +40,8 @@ services:
       - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
       - "${ANIME_LIBRARY_DIR}:/anime"
       - "${MUSIC_LIBRARY_DIR}:/music"
+    labels:
+      - "diun.enable=true"
   # jellyfin:
   #   container_name: jellyfin
   #   image: jellyfin/jellyfin:10.8.0-beta2
@@ -79,9 +82,13 @@ services:
       - net_admin
       - sys_module
     command: tailscaled
+    labels:
+      - "diun.enable=true"
   pihole:
     container_name: pihole
     image: pihole/pihole:2022.04.3
+    depends_on:
+      - unbound
     hostname: pihole
     domainname: local
     mac_address: de:ad:be:ef:ff:01
@@ -104,6 +111,8 @@ services:
       - "${PIHOLE_ROOT_DIR}:/etc/pihole"
       - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
     restart: always
+    labels:
+      - "diun.enable=true"
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
@@ -117,6 +126,8 @@ services:
     volumes:
       - "${UNBOUND_ROOT_DIR}:/opt/unbound/etc/unbound"
     restart: always
+    labels:
+      - "diun.enable=true"
   netdata:
     container_name: netdata
     image: netdata/netdata:stable
@@ -145,6 +156,8 @@ services:
     security_opt:
       - apparmor:unconfined
     restart: unless-stopped
+    labels:
+      - "diun.enable=true"
   gonic:
     container_name: gonic
     image: sentriz/gonic:nightly
@@ -167,9 +180,13 @@ services:
     devices:
       - /dev/snd:/dev/snd
     restart: unless-stopped
+    labels:
+      - "diun.enable=true"
   sonarr:
     image: linuxserver/sonarr:latest
     container_name: sonarr
+    depends_on:
+      - qbittorrent
     environment:
       - TZ
       - PGID
@@ -180,6 +197,8 @@ services:
     ports:
       - 8989:8989
     restart: unless-stopped
+    labels:
+      - "diun.enable=true"
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -196,19 +215,8 @@ services:
       - 6881:6881
       - 6881:6881/udp
     restart: unless-stopped
-  # guacamole:
-  #   image: maxwaldorf/guacamole:latest
-  #   container_name: guacamole
-  #   environment:
-  #     - TZ
-  #     - PGID
-  #     - PUID
-  #     - EXTENSIONS=auth-quickconnect,auth-jdbc-postgresql
-  #   ports:
-  #     - 8888:8080
-  #   volumes:
-  #     - /home/aldwin7894/guacamole:/config
-  #   restart: unless-stopped
+    labels:
+      - "diun.enable=true"
   meshcentral:
     image: ghcr.io/gurucomputing/meshcentral-docker:latest
     container_name: meshcentral
@@ -216,9 +224,9 @@ services:
       - TZ
       - PGID
       - PUID
-      - MONGODB_URL=${MONGODB_URL}
+      - MONGODB_URL
       - MONGODB_NAME=meshcentral
-      - DB_ENCRYPT_KEY=${DB_ENCRYPT_KEY}
+      - DB_ENCRYPT_KEY
       - AGENT_PORT=8800
     ports:
       - 8800:8800
@@ -228,6 +236,23 @@ services:
       - "${MESHCENTRAL_DATA_DIR}:/meshcentral/meshcentral-data"
       - "${MESHCENTRAL_FILES_DIR}:/meshcentral/meshcentral-files"
       - "${MESHCENTRAL_BACKUP_DIR}:/meshcentral/meshcentral-backup"
+    restart: always
+    labels:
+      - "diun.enable=true"
+  diun:
+    image: crazymax/diun:latest
+    container_name: diun
+    command: serve
+    volumes:
+      - "${DIUN_DATA_DIR}:/data"
+      - "${DIUN_CONFIG_FILE}:/diun.yml:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - TZ
+      - LOG_LEVEL=info
+      - LOG_JSON=false
+    labels:
+      - "diun.enable=true"
     restart: always
 
 networks:
