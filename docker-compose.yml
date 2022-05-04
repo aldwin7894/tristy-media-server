@@ -14,6 +14,7 @@ services:
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
       - "${ANIME_ROOT_DIR}:/mnt"
+      - "${ANIME_PUBLIC_DIR}:/mnt/anime-public"
     labels:
       - "diun.enable=true"
   jellyfin:
@@ -38,7 +39,8 @@ services:
       - "${JELLYFIN_ROOT_DIR}:/config"
       - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
       - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
-      - "${ANIME_LIBRARY_DIR}:/anime"
+      - "${ANIME_PRIVATE_DIR}:/anime-private"
+      - "${ANIME_PUBLIC_DIR}:/anime-public"
       - "${MUSIC_LIBRARY_DIR}:/music"
     labels:
       - "diun.enable=true"
@@ -66,7 +68,8 @@ services:
   #   volumes:
   #     - "${JELLYFIN_BETA_ROOT_DIR}:/config"
   #     - "${JELLYFIN_BETA_CACHE_DIR}:/cache"
-  #     - "${ANIME_LIBRARY_DIR}:/anime"
+  #     - "${ANIME_PRIVATE_DIR}:/anime"
+  #     - "${ANIME_PUBLIC_DIR}:/anime-public"
   #     - "${MUSIC_LIBRARY_DIR}:/music"
   tailscale:
     container_name: tailscale
