@@ -197,6 +197,7 @@ services:
     volumes:
       - "${SONARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
+      - "${ANIME_PUBLIC_DIR}:/data/anime/anime-public"
     ports:
       - 8989:8989
     restart: unless-stopped
