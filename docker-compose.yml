@@ -44,33 +44,30 @@ services:
       - "${MUSIC_LIBRARY_DIR}:/music"
     labels:
       - "diun.enable=true"
-  # jellyfin:
-  #   container_name: jellyfin
-  #   image: jellyfin/jellyfin:10.8.0-beta2
-  #   ports:
-  #     - 1900:1900/udp
-  #     - 7359:7359/udp
-  #     - 8000:8000
-  #     - 8096:8096
-  #   privileged: true
-  #   devices:
-  #     - /dev/dri:/dev/dri
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - JELLYFIN_CACHE_DIR=/config/cache
-  #     - JELLYFIN_CONFIG_DIR=/config/jellyfin-data
-  #     - JELLYFIN_DATA_DIR=/config
-  #     - JELLYFIN_LOG_DIR=/config/log
-  #     - JELLYFIN_WEB_DIR=/config/jellyfin-web
-  #     - JELLYFIN_FFMPEG_DIR:/config/jellyfin-ffmpeg
-  #   volumes:
-  #     - "${JELLYFIN_BETA_ROOT_DIR}:/config"
-  #     - "${JELLYFIN_BETA_CACHE_DIR}:/cache"
-  #     - "${ANIME_PRIVATE_DIR}:/anime"
-  #     - "${ANIME_PUBLIC_DIR}:/anime-public"
-  #     - "${MUSIC_LIBRARY_DIR}:/music"
+  jellyfin-beta:
+    container_name: jellyfin-beta
+    image: jellyfin/jellyfin:10.8.0-beta3
+    ports:
+      - 1901:1900/udp
+      - 7360:7359/udp
+      - 8001:8000
+      - 8090:8096
+    restart: unless-stopped
+    devices:
+      - /dev/dri:/dev/dri
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - JELLYFIN_CONFIG_DIR=/config/jellyfin-data
+      - JELLYFIN_DATA_DIR=/config
+      - JELLYFIN_LOG_DIR=/config/log
+    volumes:
+      - "${JELLYFIN_BETA_ROOT_DIR}:/config"
+      - "${JELLYFIN_BETA_CACHE_DIR}:/cache"
+      - "${ANIME_PRIVATE_DIR}:/anime-private:ro"
+      - "${ANIME_PUBLIC_DIR}:/anime-public:ro"
+      - "${MUSIC_LIBRARY_DIR}:/music:ro"
   tailscale:
     container_name: tailscale
     hostname: tailscale
@@ -89,7 +86,7 @@ services:
       - "diun.enable=true"
   pihole:
     container_name: pihole
-    image: pihole/pihole:2022.04.3
+    image: pihole/pihole:2022.05
     depends_on:
       - unbound
     hostname: pihole
