@@ -115,7 +115,7 @@ services:
       - "diun.enable=true"
   unbound:
     container_name: unbound
-    image: mvance/unbound:latest
+    image: mvance/unbound:1.16.0
     networks:
       macvlan0:
         ipv4_address: ${UNBOUND_MACVLAN_IP}
@@ -126,6 +126,8 @@ services:
     volumes:
       - "${UNBOUND_ROOT_DIR}:/opt/unbound/etc/unbound"
     restart: always
+    healthcheck:
+      disable: true
     labels:
       - "diun.enable=true"
   netdata:
