@@ -10,11 +10,11 @@ services:
       - PUID
       - PGID
       - TZ
-      - AVDUMP_MONO=true
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
       - "${ANIME_ROOT_DIR}:/mnt"
       - "${ANIME_PUBLIC_DIR}:/mnt/anime-public"
+      - "${ANIME_MOVIE_PUBLIC_DIR}:/mnt/anime-movie-public"
     labels:
       - "diun.enable=true"
   jellyfin:
@@ -40,34 +40,12 @@ services:
       - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
       - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
       - "${ANIME_PRIVATE_DIR}:/anime-private"
+      - "${ANIME_MOVIE_PRIVATE_DIR}:/anime-movie-private"
       - "${ANIME_PUBLIC_DIR}:/anime-public"
+      - "${ANIME_MOVIE_PUBLIC_DIR}:/anime-movie-public"
       - "${MUSIC_LIBRARY_DIR}:/music"
     labels:
       - "diun.enable=true"
-  jellyfin-beta:
-    container_name: jellyfin-beta
-    image: jellyfin/jellyfin:10.8.0-beta3
-    ports:
-      - 1901:1900/udp
-      - 7360:7359/udp
-      - 8001:8000
-      - 8090:8096
-    restart: unless-stopped
-    devices:
-      - /dev/dri:/dev/dri
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - JELLYFIN_CONFIG_DIR=/config/jellyfin-data
-      - JELLYFIN_DATA_DIR=/config
-      - JELLYFIN_LOG_DIR=/config/log
-    volumes:
-      - "${JELLYFIN_BETA_ROOT_DIR}:/config"
-      - "${JELLYFIN_BETA_CACHE_DIR}:/cache"
-      - "${ANIME_PRIVATE_DIR}:/anime-private:ro"
-      - "${ANIME_PUBLIC_DIR}:/anime-public:ro"
-      - "${MUSIC_LIBRARY_DIR}:/music:ro"
   tailscale:
     container_name: tailscale
     hostname: tailscale
