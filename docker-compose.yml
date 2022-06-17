@@ -180,6 +180,24 @@ services:
     restart: unless-stopped
     labels:
       - "diun.enable=true"
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    depends_on:
+      - qbittorrent
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    volumes:
+      - "${RADARR_ROOT_DIR}:/config"
+      - "${VIDEO_ROOT_DIR}:/data"
+      - "${ANIME_MOVIE_PUBLIC_DIR}:/data/anime/anime-movie-public"
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
