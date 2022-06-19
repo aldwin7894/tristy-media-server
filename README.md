@@ -2,31 +2,44 @@
 
 #### ENV vars
 ```bash
-PUID=""                   # USER ID
-PGID=""                   # GROUP ID
-TZ=""                     # TIMEZONE
+#======================================================================================
+# DOCKER CONFIG
+#======================================================================================
+PUID=""                         # USER ID
+PGID=""                         # GROUP ID
+TZ=""                           # TIMEZONE
 
-ANIME_ROOT_DIR=""         # ANIME ROOT DIR CONTAINING DROP SOURCE AND DESTINATION
-ANIME_PRIVATE_DIR=""      # ANIME PRIVATE DIR
-ANIME_PUBLIC_DIR=""       # ANIME PUBLIC DIR
-MUSIC_LIBRARY_DIR=""      # MUSIC LIBRARY DIR
-VIDEO_ROOT_DIR=""         # VIDEO ROOT DIR
-PODCAST_ROOT_DIR=""       # PODCAST ROOT DIR
+#======================================================================================
+# MEDIA FOLDERS
+#======================================================================================
+MUSIC_LIBRARY_DIR=""            # MUSIC LIBRARY DIR
+PODCAST_ROOT_DIR=""             # PODCAST ROOT DIR
+VIDEO_ROOT_DIR=""               # VIDEO ROOT DIR
+ANIME_ROOT_DIR=""               # ANIME ROOT DIR CONTAINING DROP SOURCE AND DESTINATION
+ANIME_PRIVATE_DIR=""            # ANIME PRIVATE DIR
+ANIME_MOVIE_PRIVATE_DIR=""      # ANIME MOVIE PRIVATE DIR
+ANIME_PUBLIC_DIR=""             # ANIME PUBLIC DIR
+ANIME_MOVIE_PUBLIC_DIR=""       # ANIME MOVIE PUBLIC DIR
 
-SHOKO_ROOT_DIR=""         # SHOKO SERVER ROOT DIR
+#======================================================================================
+# MEDIA SERVER, METADATA AND DOWNLOADER
+#======================================================================================
+JELLYFIN_ROOT_DIR=""            # JELLYFIN ROOT DIR
+JELLYFIN_WEB_DIR=""             # TEST PRE-RELEASE WEB
+JELLYFIN_FFMPEG_DIR=""          # TEST PRE-RELEASE FFMPEG
 
-JELLYFIN_ROOT_DIR=""      # JELLYFIN ROOT DIR
-JELLYFIN_WEB_DIR=""       # TEST PRE-RELEASE WEB
-JELLYFIN_FFMPEG_DIR=""    # TEST PRE-RELEASE FFMPEG
+GONIC_ROOT_DIR=""               # GONIC ROOT DIR
+GONIC_CACHE_DIR=""              # GONIC CACHE DIR
 
-CADDYFILE=""              # CADDY CONFIG FILE
-CADDY_DATA_DIR=""         # CADDY DATA DIR
-CADDY_CONFIG_DIR=""       # CADDY CONFIG DIR
-
-TAILSCALE_ROOT_DIR=""     # TAILSCALE ROOT DIR
-
+TAILSCALE_ROOT_DIR=""           # TAILSCALE ROOT DIR
+SHOKO_ROOT_DIR=""               # SHOKO SERVER ROOT DIR
 SONARR_ROOT_DIR=""
+RADARR_ROOT_DUIR=""
+QBITTORRENT_ROOT_DIR=""
 
+#======================================================================================
+# UTILITIES
+#======================================================================================
 PIHOLE_WEBPASSWORD=""
 PIHOLE_ROOT_DIR=""
 PIHOLE_DNSMASQ_DIR=""
@@ -42,11 +55,18 @@ NETDATA_CONFIG_DIR=""
 NETDATA_LIB_DIR=""
 NETDATA_CACHE_DIR=""
 
-GONIC_ROOT_DIR=""
-GONIC_CACHE_DIR=""
+#======================================================================================
+# REMOTE CONTROL
+#======================================================================================
+MESHCENTRAL_DATA_DIR=""
+MESHCENTRAL_FILES_DIR=""
+MESHCENTRAL_BACKUP_DIR=""
+MONGODB_URL=""
+DB_ENCRYPT_KEY=""
 
-QBITTORRENT_ROOT_DIR=""
-
+#======================================================================================
+# UPDATE NOTIFIER
+#======================================================================================
 DIUN_DATA_DIR=""
 DIUN_CONFIG_FILE=""
 ```
