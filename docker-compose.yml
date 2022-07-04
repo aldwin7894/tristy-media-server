@@ -138,6 +138,31 @@ services:
     restart: unless-stopped
     labels:
       - "diun.enable=true"
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - "${PROMETHEUS_ROOT_DIR}:/etc/prometheus"
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    ports:
+      - 9090:9090
+    restart: always
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    volumes:
+      - "${GRAFANA_ROOT_DIR}:/var/lib/grafana"
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    ports:
+      - 3000:3000
+    restart: always
   gonic:
     container_name: gonic
     image: sentriz/gonic:nightly
@@ -174,6 +199,7 @@ services:
     volumes:
       - "${SONARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
+      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
       - "${ANIME_PUBLIC_DIR}:/data/anime/anime-public"
     ports:
       - 8989:8989
@@ -192,6 +218,7 @@ services:
     volumes:
       - "${RADARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
+      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
       - "${ANIME_MOVIE_PUBLIC_DIR}:/data/anime/anime-movie-public"
     ports:
       - 7878:7878
@@ -209,6 +236,7 @@ services:
     volumes:
       - "${QBITTORRENT_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
+      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
     ports:
       - 8080:8080
       - 6881:6881
