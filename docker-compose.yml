@@ -64,7 +64,7 @@ services:
       - "diun.enable=true"
   pihole:
     container_name: pihole
-    image: pihole/pihole:2022.05
+    image: pihole/pihole:latest
     depends_on:
       - unbound
     hostname: pihole
@@ -163,27 +163,20 @@ services:
     ports:
       - 3000:3000
     restart: always
-  gonic:
-    container_name: gonic
-    image: sentriz/gonic:nightly
+  navidrome:
+    container_name: navidrome
+    image: deluan/navidrome:latest
     environment:
       - TZ
       - PGID
       - PUID
-      - GONIC_GENRE_SPLIT=;
-      - GONIC_SCAN_INTERVAL=120
+      - ND_CONFIGFILE=/data/navidrome.toml
     ports:
-      - 8097:80
-      - 4747:4747
+      - 8097:4533
     volumes:
-      - "${GONIC_ROOT_DIR}:/data"
+      - "${NAVIDROME_ROOT_DIR}:/data"
       - "${MUSIC_LIBRARY_DIR}:/music:ro"
       - "${PODCAST_ROOT_DIR}:/podcasts:ro"
-      - "${GONIC_CACHE_DIR}:/cache"
-    group_add:
-      - audio
-    devices:
-      - /dev/snd:/dev/snd
     restart: unless-stopped
     labels:
       - "diun.enable=true"
