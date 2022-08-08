@@ -3,7 +3,6 @@ services:
   shoko_server:
     container_name: shoko-server
     image: shokoanime/server:daily
-    restart: unless-stopped
     ports:
       - 8111:8111
     environment:
@@ -15,6 +14,7 @@ services:
       - "${ANIME_ROOT_DIR}:/mnt"
       - "${ANIME_PUBLIC_DIR}:/mnt/anime-public"
       - "${ANIME_MOVIE_PUBLIC_DIR}:/mnt/anime-movie-public"
+    restart: unless-stopped
     labels:
       - "diun.enable=true"
   jellyfin:
@@ -22,7 +22,6 @@ services:
     image: linuxserver/jellyfin:latest
     depends_on:
       - shoko_server
-    restart: unless-stopped
     ports:
       - 1900:1900/udp
       - 7359:7359/udp
@@ -44,68 +43,121 @@ services:
       - "${ANIME_PUBLIC_DIR}:/anime-public"
       - "${ANIME_MOVIE_PUBLIC_DIR}:/anime-movie-public"
       - "${MUSIC_LIBRARY_DIR}:/music"
-    labels:
-      - "diun.enable=true"
-  tailscale:
-    container_name: tailscale
-    hostname: tailscale
-    image: tailscale/tailscale:latest
     restart: unless-stopped
-    network_mode: host
-    privileged: true
-    volumes:
-      - "${TAILSCALE_ROOT_DIR}:/var/lib"
-      - /dev/net/tun:/dev/net/tun
-    cap_add:
-      - net_admin
-      - sys_module
-    command: tailscaled
     labels:
       - "diun.enable=true"
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
-    depends_on:
-      - unbound
-    hostname: pihole
-    domainname: local
-    mac_address: de:ad:be:ef:ff:01
-    networks:
-      macvlan0:
-        ipv4_address: ${PIHOLE_MACVLAN_IP}
-    dns:
-      - "${UNBOUND_MACVLAN_IP}"
-    ports:
-      - 443/tcp
-      - 53/tcp
-      - 53/udp
-      - 80/udp
+  navidrome:
+    container_name: navidrome
+    image: deluan/navidrome:latest
     environment:
       - TZ
-      - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
-      - ServerIP=${PIHOLE_MACVLAN_IP}
-      - VIRTUAL_HOST=pihole.local
+      - PGID
+      - PUID
+      - ND_CONFIGFILE=/data/navidrome.toml
+    ports:
+      - 8097:4533
     volumes:
-      - "${PIHOLE_ROOT_DIR}:/etc/pihole"
-      - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
-    restart: always
+      - "${NAVIDROME_ROOT_DIR}:/data"
+      - "${MUSIC_LIBRARY_DIR}:/music:ro"
+      - "${PODCAST_ROOT_DIR}:/podcasts:ro"
+    restart: unless-stopped
     labels:
       - "diun.enable=true"
-  unbound:
-    container_name: unbound
-    image: mvance/unbound:1.16.0
-    networks:
-      macvlan0:
-        ipv4_address: ${UNBOUND_MACVLAN_IP}
-    ports:
-      - 53:53/tcp
-      - 53:53/udp
-      - 8953:8953/tcp
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - WEBUI_PORT=8080
     volumes:
-      - "${UNBOUND_ROOT_DIR}:/opt/unbound/etc/unbound"
+      - "${QBITTORRENT_ROOT_DIR}:/config"
+      - "${VIDEO_ROOT_DIR}:/data"
+      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+  prowlarr:
+    image: linuxserver/prowlarr:develop
+    container_name: prowlarr
+    depends_on:
+      - qbittorrent
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    volumes:
+      - "${PROWLARR_ROOT_DIR}:/config"
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    depends_on:
+      - qbittorrent
+      - prowlarr
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    volumes:
+      - "${SONARR_ROOT_DIR}:/config"
+      - "${VIDEO_ROOT_DIR}:/data"
+      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
+      - "${ANIME_PUBLIC_DIR}:/data/anime/anime-public"
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    depends_on:
+      - qbittorrent
+      - prowlarr
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    volumes:
+      - "${RADARR_ROOT_DIR}:/config"
+      - "${VIDEO_ROOT_DIR}:/data"
+      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
+      - "${ANIME_MOVIE_PUBLIC_DIR}:/data/anime/anime-movie-public"
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+  meshcentral:
+    image: ghcr.io/gurucomputing/meshcentral-docker:latest
+    container_name: meshcentral
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - MONGODB_URL
+      - MONGODB_NAME=meshcentral
+      - DB_ENCRYPT_KEY
+      - AGENT_PORT=8800
+    ports:
+      - 8800:8800
+      - 8888:80
+      - 9999:443
+    volumes:
+      - "${MESHCENTRAL_DATA_DIR}:/meshcentral/meshcentral-data"
+      - "${MESHCENTRAL_FILES_DIR}:/meshcentral/meshcentral-files"
+      - "${MESHCENTRAL_BACKUP_DIR}:/meshcentral/meshcentral-backup"
     restart: always
-    healthcheck:
-      disable: true
     labels:
       - "diun.enable=true"
   netdata:
@@ -141,6 +193,8 @@ services:
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
+    depends_on:
+      - netdata
     volumes:
       - "${PROMETHEUS_ROOT_DIR}:/etc/prometheus"
     environment:
@@ -153,6 +207,8 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
+    depends_on:
+      - prometheus
     volumes:
       - "${GRAFANA_ROOT_DIR}:/var/lib/grafana"
     environment:
@@ -163,99 +219,65 @@ services:
     ports:
       - 3000:3000
     restart: always
-  navidrome:
-    container_name: navidrome
-    image: deluan/navidrome:latest
-    environment:
-      - TZ
-      - PGID
-      - PUID
-      - ND_CONFIGFILE=/data/navidrome.toml
-    ports:
-      - 8097:4533
+  tailscale:
+    container_name: tailscale
+    hostname: tailscale
+    image: tailscale/tailscale:latest
+    network_mode: host
+    privileged: true
     volumes:
-      - "${NAVIDROME_ROOT_DIR}:/data"
-      - "${MUSIC_LIBRARY_DIR}:/music:ro"
-      - "${PODCAST_ROOT_DIR}:/podcasts:ro"
-    restart: unless-stopped
+      - "${TAILSCALE_ROOT_DIR}:/var/lib"
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    command: tailscaled
+    restart: always
     labels:
       - "diun.enable=true"
-  sonarr:
-    image: linuxserver/sonarr:latest
-    container_name: sonarr
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:1.16.0
+    networks:
+      macvlan0:
+        ipv4_address: ${UNBOUND_MACVLAN_IP}
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 8953:8953/tcp
+    volumes:
+      - "${UNBOUND_ROOT_DIR}:/opt/unbound/etc/unbound"
+    healthcheck:
+      disable: true
+    restart: always
+    labels:
+      - "diun.enable=true"
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
     depends_on:
-      - qbittorrent
+      - unbound
+    hostname: pihole
+    domainname: local
+    mac_address: de:ad:be:ef:ff:01
+    networks:
+      macvlan0:
+        ipv4_address: ${PIHOLE_MACVLAN_IP}
+    dns:
+      - "${UNBOUND_MACVLAN_IP}"
+    ports:
+      - 443/tcp
+      - 53/tcp
+      - 53/udp
+      - 80/udp
     environment:
       - TZ
-      - PGID
-      - PUID
+      - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
+      - ServerIP=${PIHOLE_MACVLAN_IP}
+      - VIRTUAL_HOST=pihole.local
     volumes:
-      - "${SONARR_ROOT_DIR}:/config"
-      - "${VIDEO_ROOT_DIR}:/data"
-      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
-      - "${ANIME_PUBLIC_DIR}:/data/anime/anime-public"
-    ports:
-      - 8989:8989
-    restart: unless-stopped
-    labels:
-      - "diun.enable=true"
-  radarr:
-    image: linuxserver/radarr:latest
-    container_name: radarr
-    depends_on:
-      - qbittorrent
-    environment:
-      - TZ
-      - PGID
-      - PUID
-    volumes:
-      - "${RADARR_ROOT_DIR}:/config"
-      - "${VIDEO_ROOT_DIR}:/data"
-      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
-      - "${ANIME_MOVIE_PUBLIC_DIR}:/data/anime/anime-movie-public"
-    ports:
-      - 7878:7878
-    restart: unless-stopped
-    labels:
-      - "diun.enable=true"
-  qbittorrent:
-    image: linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    environment:
-      - TZ
-      - PGID
-      - PUID
-      - WEBUI_PORT=8080
-    volumes:
-      - "${QBITTORRENT_ROOT_DIR}:/config"
-      - "${VIDEO_ROOT_DIR}:/data"
-      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
-    ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
-    restart: unless-stopped
-    labels:
-      - "diun.enable=true"
-  meshcentral:
-    image: ghcr.io/gurucomputing/meshcentral-docker:latest
-    container_name: meshcentral
-    environment:
-      - TZ
-      - PGID
-      - PUID
-      - MONGODB_URL
-      - MONGODB_NAME=meshcentral
-      - DB_ENCRYPT_KEY
-      - AGENT_PORT=8800
-    ports:
-      - 8800:8800
-      - 8888:80
-      - 9999:443
-    volumes:
-      - "${MESHCENTRAL_DATA_DIR}:/meshcentral/meshcentral-data"
-      - "${MESHCENTRAL_FILES_DIR}:/meshcentral/meshcentral-files"
-      - "${MESHCENTRAL_BACKUP_DIR}:/meshcentral/meshcentral-backup"
+      - "${PIHOLE_ROOT_DIR}:/etc/pihole"
+      - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
     restart: always
     labels:
       - "diun.enable=true"
@@ -271,9 +293,9 @@ services:
       - TZ
       - LOG_LEVEL=info
       - LOG_JSON=false
+    restart: always
     labels:
       - "diun.enable=true"
-    restart: always
 
 networks:
   macvlan0:

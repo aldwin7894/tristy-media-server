@@ -30,15 +30,21 @@ JELLYFIN_FFMPEG_DIR=""          # TEST PRE-RELEASE FFMPEG
 
 NAVIDROME_ROOT_DIR=""           # GONIC ROOT DIR
 
-TAILSCALE_ROOT_DIR=""           # TAILSCALE ROOT DIR
 SHOKO_ROOT_DIR=""               # SHOKO SERVER ROOT DIR
+
 SONARR_ROOT_DIR=""
-RADARR_ROOT_DUIR=""
+
+RADARR_ROOT_DIR=""
+
+PROWLARR_ROOT_DIR=""
+
 QBITTORRENT_ROOT_DIR=""
 
 #======================================================================================
-# UTILITIES
+# MONITORING AND UTILITIES
 #======================================================================================
+TAILSCALE_ROOT_DIR=""           # TAILSCALE ROOT DIR
+
 PIHOLE_WEBPASSWORD=""
 PIHOLE_ROOT_DIR=""
 PIHOLE_DNSMASQ_DIR=""
@@ -53,6 +59,10 @@ NETDATA_CLAIM_ROOMS=""
 NETDATA_CONFIG_DIR=""
 NETDATA_LIB_DIR=""
 NETDATA_CACHE_DIR=""
+
+PROMETHEUS_ROOT_DIR=""
+
+GRAFANA_ROOT_DIR=""
 
 #======================================================================================
 # REMOTE CONTROL
