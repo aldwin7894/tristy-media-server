@@ -12,8 +12,9 @@ services:
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
       - "${ANIME_ROOT_DIR}:/mnt"
-      - "${ANIME_PUBLIC_DIR}:/mnt/anime-public"
-      - "${ANIME_MOVIE_PUBLIC_DIR}:/mnt/anime-movie-public"
+      - "${ANIME_IMPORTING_DIR}:/mnt/anime-importing"
+      - "${ANIME_PRIVATE_DIR}:/mnt/anime-private"
+      - "${ANIME_MOVIE_PRIVATE_DIR}:/mnt/anime-movie-private"
     restart: unless-stopped
     labels:
       - "diun.enable=true"
@@ -74,7 +75,6 @@ services:
     volumes:
       - "${QBITTORRENT_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
-      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
     ports:
       - 8080:8080
       - 6881:6881
@@ -111,8 +111,7 @@ services:
     volumes:
       - "${SONARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
-      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
-      - "${ANIME_PUBLIC_DIR}:/data/anime/anime-public"
+      - "${ANIME_PRIVATE_DIR}:/data/anime/anime-private"
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -131,8 +130,7 @@ services:
     volumes:
       - "${RADARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
-      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
-      - "${ANIME_MOVIE_PUBLIC_DIR}:/data/anime/anime-movie-public"
+      - "${ANIME_MOVIE_PRIVATE_DIR}:/data/anime/anime-movie-private"
     ports:
       - 7878:7878
     restart: unless-stopped
