@@ -39,11 +39,10 @@ services:
       - "${JELLYFIN_ROOT_DIR}:/config"
       - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
       - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
-      - "${ANIME_PRIVATE_DIR}:/anime-private"
-      - "${ANIME_MOVIE_PRIVATE_DIR}:/anime-movie-private"
-      - "${ANIME_PUBLIC_DIR}:/anime-public"
-      - "${ANIME_MOVIE_PUBLIC_DIR}:/anime-movie-public"
       - "${MUSIC_LIBRARY_DIR}:/music"
+      - "${VIDEO_ROOT_DIR}:/video"
+      - "${ANIME_PRIVATE_DIR}:/video/anime/anime-private"
+      - "${ANIME_MOVIE_PRIVATE_DIR}:/video/anime/anime-movie-private"
     restart: unless-stopped
     labels:
       - "diun.enable=true"
