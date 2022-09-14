@@ -48,7 +48,7 @@ services:
       - "diun.enable=true"
   navidrome:
     container_name: navidrome
-    image: deluan/navidrome:latest
+    image: deluan/navidrome:develop
     environment:
       - TZ
       - PGID
@@ -135,28 +135,6 @@ services:
     restart: unless-stopped
     labels:
       - "diun.enable=true"
-  meshcentral:
-    image: ghcr.io/gurucomputing/meshcentral-docker:latest
-    container_name: meshcentral
-    environment:
-      - TZ
-      - PGID
-      - PUID
-      - MONGODB_URL
-      - MONGODB_NAME=meshcentral
-      - DB_ENCRYPT_KEY
-      - AGENT_PORT=8800
-    ports:
-      - 8800:8800
-      - 8888:80
-      - 9999:443
-    volumes:
-      - "${MESHCENTRAL_DATA_DIR}:/meshcentral/meshcentral-data"
-      - "${MESHCENTRAL_FILES_DIR}:/meshcentral/meshcentral-files"
-      - "${MESHCENTRAL_BACKUP_DIR}:/meshcentral/meshcentral-backup"
-    restart: always
-    labels:
-      - "diun.enable=true"
   netdata:
     container_name: netdata
     image: netdata/netdata:stable
@@ -201,6 +179,8 @@ services:
     ports:
       - 9090:9090
     restart: always
+    labels:
+      - "diun.enable=true"
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
@@ -214,17 +194,20 @@ services:
       - PUID
       - GF_AUTH_ANONYMOUS_ENABLED=true
     ports:
-      - 3000:3000
+      - 3030:3000
     restart: always
+    labels:
+      - "diun.enable=true"
   tailscale:
     container_name: tailscale
     hostname: tailscale
-    image: tailscale/tailscale:latest
+    image: tailscale/tailscale:stable
     network_mode: host
     privileged: true
     volumes:
       - "${TAILSCALE_ROOT_DIR}:/var/lib"
       - /dev/net/tun:/dev/net/tun
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
     cap_add:
       - net_admin
       - sys_module
