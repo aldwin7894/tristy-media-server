@@ -135,6 +135,21 @@ services:
     restart: unless-stopped
     labels:
       - "diun.enable=true"
+  duplicati:
+    container_name: duplicati
+    image: linuxserver/duplicati:latest
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    volumes:
+      - "${DUPLICATI_ROOT_DIR}:/config"
+      - /mnt:/mnt
+    ports:
+      - 8200:8200
+    restart: unless-stopped
+    labels:
+      - "diun.enabled=true"
   netdata:
     container_name: netdata
     image: netdata/netdata:stable
