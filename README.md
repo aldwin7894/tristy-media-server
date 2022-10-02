@@ -1,6 +1,7 @@
 # Tristy Media Server
 
 #### ENV vars
+
 ```bash
 #======================================================================================
 # DOCKER CONFIG
@@ -66,6 +67,8 @@ PROMETHEUS_ROOT_DIR=""
 GRAFANA_ROOT_DIR=""
 
 DUPLICATI_ROOT_DIR=""
+DUPLICATI_BACKUP_DIR=""
+DUPLICATI_ROOT_DIR=""
 
 #======================================================================================
 # UPDATE NOTIFIER
@@ -75,6 +78,7 @@ DIUN_CONFIG_FILE=""
 ```
 
 #### macvlan for PiHole
+
 ```bash
 sudo docker network create -d macvlan \
         --subnet=${HOST_IP}/24 --gateway=${GATEWAY_IP} \
@@ -93,6 +97,7 @@ ip addr add 192.168.100.150/28 dev macvlan-shim
 ip link set macvlan-shim up
 ifconfig macvlan-shim
 ```
+
 `sudo chmod +x /usr/local/bin/pi-vlan.sh`
 
 ```ini
@@ -107,14 +112,17 @@ ExecStart=/usr/local/bin/pi-vlan.sh
 [Install]
 WantedBy=default.target
 ```
+
 `sudo systemctl enable pi-vlan`
 
 #### Tailscale auth
+
 ```bash
 docker-compose exec tailscale tailscale up
 ```
 
 #### Run stack in detached mode
+
 ```bash
 docker-compose up -d
 ```

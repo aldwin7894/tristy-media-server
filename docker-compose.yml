@@ -11,6 +11,7 @@ services:
       - TZ
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
+      - "${SHOKO_ROOT_DIR}/Shoko.CLI/webui:/usr/src/app/build/webui"
       - "${ANIME_ROOT_DIR}:/mnt"
       - "${ANIME_IMPORTING_DIR}:/mnt/anime-importing"
       - "${ANIME_PRIVATE_DIR}:/mnt/anime-private"
@@ -144,7 +145,8 @@ services:
       - PUID
     volumes:
       - "${DUPLICATI_ROOT_DIR}:/config"
-      - /mnt:/mnt
+      - "${DUPLICATI_BACKUPS_DIR}:/backups"
+      - "${DUPLICATI_SOURCE_DIR}:/source"
     ports:
       - 8200:8200
     restart: unless-stopped
@@ -186,7 +188,8 @@ services:
     depends_on:
       - netdata
     volumes:
-      - "${PROMETHEUS_ROOT_DIR}:/etc/prometheus"
+      - "${PROMETHEUS_ROOT_DIR}/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "${PROMETHEUS_ROOT_DIR}:/prometheus"
     environment:
       - TZ
       - PGID
