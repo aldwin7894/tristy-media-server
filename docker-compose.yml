@@ -221,8 +221,6 @@ services:
     image: cloudflare/cloudflared:latest
     network_mode: host
     command: tunnel run
-    volumes:
-      - "${CLOUDFLARED_ROOT_DIR}/etc/cloudflared"
     environment:
       - TUNNEL_TOKEN
     restart: always
