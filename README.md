@@ -45,7 +45,8 @@ QBITTORRENT_ROOT_DIR=""
 #======================================================================================
 # MONITORING AND UTILITIES
 #======================================================================================
-TAILSCALE_ROOT_DIR=""           # TAILSCALE ROOT DIR
+CLOUDFLARED_ROOT_DIR=""           # CLOUDFLARED ROOT DIR
+TUNNEL_TOKEN=""                   # CLOUDFLARE TUNNEL TOKEN
 
 PIHOLE_WEBPASSWORD=""
 PIHOLE_ROOT_DIR=""
@@ -114,12 +115,6 @@ WantedBy=default.target
 ```
 
 `sudo systemctl enable pi-vlan`
-
-#### Tailscale auth
-
-```bash
-docker-compose exec tailscale tailscale up
-```
 
 #### Run stack in detached mode
 

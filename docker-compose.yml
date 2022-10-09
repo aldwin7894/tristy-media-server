@@ -216,20 +216,15 @@ services:
     restart: always
     labels:
       - "diun.enable=true"
-  tailscale:
-    container_name: tailscale
-    hostname: tailscale
-    image: tailscale/tailscale:stable
+  cloudflare_tunnel:
+    container_name: cloudflare-tunnel
+    image: cloudflare/cloudflared:latest
     network_mode: host
-    privileged: true
+    command: tunnel run
     volumes:
-      - "${TAILSCALE_ROOT_DIR}:/var/lib"
-      - /dev/net/tun:/dev/net/tun
-      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
-    cap_add:
-      - net_admin
-      - sys_module
-    command: tailscaled
+      - "${CLOUDFLARED_ROOT_DIR}/etc/cloudflared"
+    environment:
+      - TUNNEL_TOKEN
     restart: always
     labels:
       - "diun.enable=true"
