@@ -228,7 +228,7 @@ services:
       - "diun.enable=true"
   unbound:
     container_name: unbound
-    image: mvance/unbound:1.16.0
+    image: mvance/unbound:latest
     networks:
       macvlan0:
         ipv4_address: ${UNBOUND_MACVLAN_IP}
