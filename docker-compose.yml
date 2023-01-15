@@ -145,8 +145,7 @@ services:
       - PUID
     volumes:
       - "${LIDARR_ROOT_DIR}:/config"
-      - "${MUSIC_LIBRARY_DIR}:/music"
-      - "${MUSIC_LIBRARY_DIR}/downloads:/downloads"
+      - "${MUSIC_LIBRARY_DIR}:/data"
     ports:
       - 8686:8686
     restart: unless-stopped
