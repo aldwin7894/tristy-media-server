@@ -136,6 +136,22 @@ services:
     restart: unless-stopped
     labels:
       - "diun.enable=true"
+  lidarr:
+    image: linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    volumes:
+      - "${LIDARR_ROOT_DIR}:/config"
+      - "${MUSIC_LIBRARY_DIR}:/music"
+      - "${MUSIC_LIBRARY_DIR}/downloads:/downloads"
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
   duplicati:
     container_name: duplicati
     image: linuxserver/duplicati:latest
