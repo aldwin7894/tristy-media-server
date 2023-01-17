@@ -75,7 +75,7 @@ services:
     volumes:
       - "${QBITTORRENT_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
-      - "${MUSIC_LIBRARY_DIR}:/data"
+      - "${MUSIC_LIBRARY_DIR}/music-downloads:/data/music-downloads"
     ports:
       - 8081:8081
       - 6881:6881
