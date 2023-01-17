@@ -123,3 +123,10 @@ WantedBy=default.target
 ```bash
 docker-compose up -d
 ```
+
+#### Cloudflare Tunnel
+
+```bash
+docker compose exec cloudflare_tunnel cloudflared tunnel login
+docker compose exec cloudflare_tunnel cloudflared tunnel create <name>
+```
