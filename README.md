@@ -38,8 +38,6 @@ SONARR_ROOT_DIR=""              # SONARR ROOT DIR
 
 RADARR_ROOT_DIR=""              # RADARR ROOT DIR
 
-LIDARR_ROOT_DIR=""              # LIDARR ROOT DIR
-
 PROWLARR_ROOT_DIR=""            # PROWLARR ROOT DIR
 
 QBITTORRENT_ROOT_DIR=""         # QBITTORRENT ROOT DIR
@@ -57,6 +55,8 @@ PIHOLE_MACVLAN_IP=""
 
 UNBOUND_ROOT_DIR=""
 UNBOUND_MACVLAN_IP=""
+
+UNBOUND_REDIS_MACVLANIP=""
 
 NETDATA_CLAIM_TOKEN=""
 NETDATA_CLAIM_URL=""
@@ -96,7 +96,7 @@ sudo docker network create -d macvlan \
 
 #!/usr/bin/env bash
 ip link add macvlan-shim link eno1 type macvlan mode bridge
-ip addr add 192.168.100.150/28 dev macvlan-shim
+ip addr add ${PIHOLE_MACVLAN_AUX_IP}/28 dev macvlan-shim
 ip link set macvlan-shim up
 ifconfig macvlan-shim
 ```
