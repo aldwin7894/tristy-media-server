@@ -40,7 +40,7 @@ services:
       - "${JELLYFIN_ROOT_DIR}:/config"
       - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
       - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
-      - "${MUSIC_LIBRARY_DIR}:/music"
+      - "${MUSIC_ROOT_DIR}:/music"
       - "${VIDEO_ROOT_DIR}:/video"
       - "${ANIME_PRIVATE_DIR}:/video/anime/anime-private"
       - "${ANIME_MOVIE_PRIVATE_DIR}:/video/anime/anime-movie-private"
@@ -59,7 +59,7 @@ services:
       - 8097:4533
     volumes:
       - "${NAVIDROME_ROOT_DIR}:/data"
-      - "${MUSIC_LIBRARY_DIR}:/music:ro"
+      - "${MUSIC_ROOT_DIR}:/music:ro"
       - "${PODCAST_ROOT_DIR}:/podcasts:ro"
     restart: unless-stopped
     labels:
