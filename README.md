@@ -13,7 +13,8 @@ TZ=""                           # TIMEZONE
 #======================================================================================
 # MEDIA FOLDERS
 #======================================================================================
-MUSIC_LIBRARY_DIR=""            # MUSIC LIBRARY DIR
+MUSIC_ROOT_DIR=""               # MUSIC ROOT DIR
+MUSIC_DOWNLOAD_DIR=""           # MUSIC DOWNLOAD DIR
 PODCAST_ROOT_DIR=""             # PODCAST ROOT DIR
 VIDEO_ROOT_DIR=""               # VIDEO ROOT DIR
 ANIME_ROOT_DIR=""               # ANIME ROOT DIR CONTAINING DROP SOURCE AND DESTINATION
@@ -29,17 +30,12 @@ ANIME_MOVIE_PUBLIC_DIR=""       # ANIME MOVIE PUBLIC DIR
 JELLYFIN_ROOT_DIR=""            # JELLYFIN ROOT DIR
 JELLYFIN_WEB_DIR=""             # TEST PRE-RELEASE WEB
 JELLYFIN_FFMPEG_DIR=""          # TEST PRE-RELEASE FFMPEG
-
 NAVIDROME_ROOT_DIR=""           # NAVIDROME ROOT DIR
-
 SHOKO_ROOT_DIR=""               # SHOKO SERVER ROOT DIR
-
 SONARR_ROOT_DIR=""              # SONARR ROOT DIR
-
 RADARR_ROOT_DIR=""              # RADARR ROOT DIR
-
 PROWLARR_ROOT_DIR=""            # PROWLARR ROOT DIR
-
+DEEMIX_ROOT_DIR=""              # DEEMIX ROOT DIR
 QBITTORRENT_ROOT_DIR=""         # QBITTORRENT ROOT DIR
 
 #======================================================================================
@@ -47,28 +43,21 @@ QBITTORRENT_ROOT_DIR=""         # QBITTORRENT ROOT DIR
 #======================================================================================
 CLOUDFLARED_ROOT_DIR=""           # CLOUDFLARED ROOT DIR
 TUNNEL_TOKEN=""                   # CLOUDFLARE TUNNEL TOKEN
-
-PIHOLE_WEBPASSWORD=""
 PIHOLE_ROOT_DIR=""
+PIHOLE_WEBPASSWORD=""
 PIHOLE_DNSMASQ_DIR=""
 PIHOLE_MACVLAN_IP=""
-
 UNBOUND_ROOT_DIR=""
 UNBOUND_MACVLAN_IP=""
-
 UNBOUND_REDIS_MACVLANIP=""
-
 NETDATA_CLAIM_TOKEN=""
 NETDATA_CLAIM_URL=""
 NETDATA_CLAIM_ROOMS=""
 NETDATA_CONFIG_DIR=""
 NETDATA_LIB_DIR=""
 NETDATA_CACHE_DIR=""
-
 PROMETHEUS_ROOT_DIR=""
-
 GRAFANA_ROOT_DIR=""
-
 DUPLICATI_ROOT_DIR=""
 DUPLICATI_BACKUP_DIR=""
 DUPLICATI_ROOT_DIR=""

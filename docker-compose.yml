@@ -75,7 +75,7 @@ services:
     volumes:
       - "${QBITTORRENT_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
-      - "${MUSIC_LIBRARY_DIR}/music-downloads:/data/music-downloads"
+      - "${MUSIC_DOWNLOAD_DIR}:/data/music-downloads"
     ports:
       - 8081:8081
       - 6881:6881
@@ -137,6 +137,24 @@ services:
     restart: unless-stopped
     labels:
       - "diun.enable=true"
+  deemix:
+    image: registry.gitlab.com/bockiii/deemix-docker
+    container_name: deemix
+    volumes:
+      - "${MUSIC_DOWNLOAD_DIR}:/downloads"
+      - "${DEEMIX_ROOT_DIR}:/config"
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - UMASK_SET=022
+      - DEEMIX_SINGLE_USER=true
+    ports:
+      - 6595:6595
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+
   duplicati:
     container_name: duplicati
     image: linuxserver/duplicati:latest
