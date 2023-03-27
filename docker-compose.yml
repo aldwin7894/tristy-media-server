@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  shoko_server:
+  shoko-server:
     container_name: shoko-server
     image: shokoanime/server:daily
     ports:
@@ -9,6 +9,7 @@ services:
       - PUID
       - PGID
       - TZ
+      - AVDUMP_MONO=true
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
       - "${SHOKO_ROOT_DIR}/Shoko.CLI/webui:/usr/src/app/build/webui"
@@ -18,12 +19,12 @@ services:
       - "${ANIME_MOVIE_PRIVATE_DIR}:/mnt/anime-movie-private"
     restart: unless-stopped
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin:latest
     depends_on:
-      - shoko_server
+      - shoko-server
     ports:
       - 1900:1900/udp
       - 7359:7359/udp
@@ -46,7 +47,19 @@ services:
       - "${ANIME_MOVIE_PRIVATE_DIR}:/video/anime/anime-movie-private"
     restart: unless-stopped
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
+  jellyfin-vue:
+    container_name: jellyfin-vue
+    image: jellyfin/jellyfin-vue:unstable
+    ports:
+      - 8095:80
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    restart: unless-stopped
+    labels:
+      - diun.enable=true
   navidrome:
     container_name: navidrome
     image: deluan/navidrome:develop
@@ -63,7 +76,7 @@ services:
       - "${PODCAST_ROOT_DIR}:/podcasts:ro"
     restart: unless-stopped
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -82,7 +95,7 @@ services:
       - 6881:6881/udp
     restart: unless-stopped
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   prowlarr:
     image: linuxserver/prowlarr:develop
     container_name: prowlarr
@@ -98,7 +111,7 @@ services:
       - 9696:9696
     restart: unless-stopped
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   sonarr:
     image: linuxserver/sonarr:latest
     container_name: sonarr
@@ -117,7 +130,7 @@ services:
       - 8989:8989
     restart: unless-stopped
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   radarr:
     image: linuxserver/radarr:latest
     container_name: radarr
@@ -136,7 +149,7 @@ services:
       - 7878:7878
     restart: unless-stopped
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   deemix:
     image: registry.gitlab.com/bockiii/deemix-docker
     container_name: deemix
@@ -153,7 +166,7 @@ services:
       - 6595:6595
     restart: unless-stopped
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
 
   duplicati:
     container_name: duplicati
@@ -170,7 +183,7 @@ services:
       - 8200:8200
     restart: unless-stopped
     labels:
-      - "diun.enabled=true"
+      - diun.enable=true
   netdata:
     container_name: netdata
     image: netdata/netdata:stable
@@ -200,7 +213,7 @@ services:
       - apparmor:unconfined
     restart: unless-stopped
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
@@ -215,7 +228,7 @@ services:
       - 9090:9090
     restart: always
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
@@ -230,7 +243,7 @@ services:
       - 3030:3000
     restart: always
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   cloudflare_tunnel:
     container_name: cloudflare-tunnel
     image: cloudflare/cloudflared:latest
@@ -240,7 +253,7 @@ services:
       - TUNNEL_TOKEN
     restart: always
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   unbound-redis:
     image: redis:6-alpine
     container_name: unbound-redis
@@ -270,7 +283,7 @@ services:
       disable: true
     restart: always
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
@@ -299,7 +312,7 @@ services:
       - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
     restart: always
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
   diun:
     image: crazymax/diun:latest
     container_name: diun
@@ -307,14 +320,14 @@ services:
     volumes:
       - "${DIUN_DATA_DIR}:/data"
       - "${DIUN_CONFIG_FILE}:/diun.yml:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - TZ
       - LOG_LEVEL=info
       - LOG_JSON=false
     restart: always
     labels:
-      - "diun.enable=true"
+      - diun.enable=true
 
 networks:
   macvlan0:
