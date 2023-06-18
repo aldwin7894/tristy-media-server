@@ -61,6 +61,7 @@ GRAFANA_ROOT_DIR=""
 DUPLICATI_ROOT_DIR=""
 DUPLICATI_BACKUP_DIR=""
 DUPLICATI_ROOT_DIR=""
+PIALERT_ROOT_DIR=""
 
 #======================================================================================
 # UPDATE NOTIFIER

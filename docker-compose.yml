@@ -167,7 +167,6 @@ services:
     restart: unless-stopped
     labels:
       - diun.enable=true
-
   duplicati:
     container_name: duplicati
     image: linuxserver/duplicati:latest
@@ -250,6 +249,9 @@ services:
     network_mode: host
     command: tunnel run
     environment:
+      - PUID
+      - PGID
+      - TZ
       - TUNNEL_TOKEN
     restart: always
     labels:
@@ -304,12 +306,32 @@ services:
       - 80/udp
     environment:
       - TZ
+      - PIHOLE_UID=${PUID}
+      - PIHOLE_GID=${PGID}
       - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
       - ServerIP=${PIHOLE_MACVLAN_IP}
       - VIRTUAL_HOST=pihole.local
     volumes:
       - "${PIHOLE_ROOT_DIR}:/etc/pihole"
       - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
+    restart: always
+    labels:
+      - diun.enable=true
+  pi-alert:
+    container_name: pi-alert
+    image: jokobsk/pi.alert:latest
+    network_mode: host
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - PORT=20211
+      - HOST_USER_ID=${PUID}
+      - HOST_USER_GID=${PGID}
+    volumes:
+      - "${PIALERT_ROOT_DIR}/config:/home/pi/pialert/config"
+      - "${PIALERT_ROOT_DIR}/db:/home/pi/pialert/db"
+      - "${PIHOLE_ROOT_DIR}/pihole-FTL.db:/etc/pihole/pihole-FTL.db"
     restart: always
     labels:
       - diun.enable=true
