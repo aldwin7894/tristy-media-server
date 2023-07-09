@@ -37,6 +37,7 @@ RADARR_ROOT_DIR=""              # RADARR ROOT DIR
 PROWLARR_ROOT_DIR=""            # PROWLARR ROOT DIR
 DEEMIX_ROOT_DIR=""              # DEEMIX ROOT DIR
 QBITTORRENT_ROOT_DIR=""         # QBITTORRENT ROOT DIR
+HOMARR_ROOT_DIR=""              # HOMARR ROOT DIR
 
 #======================================================================================
 # MONITORING AND UTILITIES

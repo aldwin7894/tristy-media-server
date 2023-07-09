@@ -167,19 +167,18 @@ services:
     restart: unless-stopped
     labels:
       - diun.enable=true
-  duplicati:
-    container_name: duplicati
-    image: linuxserver/duplicati:latest
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
     environment:
       - TZ
       - PGID
       - PUID
     volumes:
-      - "${DUPLICATI_ROOT_DIR}:/config"
-      - "${DUPLICATI_BACKUPS_DIR}:/backups"
-      - "${DUPLICATI_SOURCE_DIR}:/source"
+      - "${HOMARR_ROOT_DIR}/configs:/app/data/configs"
+      - "${HOMARR_ROOT_DIR}/icons:/app/public/icons"
     ports:
-      - 8200:8200
+      - 7575:7575
     restart: unless-stopped
     labels:
       - diun.enable=true
@@ -243,29 +242,6 @@ services:
     restart: always
     labels:
       - diun.enable=true
-  cloudflare_tunnel:
-    container_name: cloudflare-tunnel
-    image: cloudflare/cloudflared:latest
-    network_mode: host
-    command: tunnel run
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - TUNNEL_TOKEN
-    restart: always
-    labels:
-      - diun.enable=true
-  unbound-redis:
-    image: redis:6-alpine
-    container_name: unbound-redis
-    networks:
-      macvlan0:
-        ipv4_address: ${UNBOUND_REDIS_MACVLAN_IP}
-    command: redis-server --save 60 1
-    volumes:
-      - "${UNBOUND_ROOT_DIR}/redis:/data"
-    restart: always
   unbound:
     container_name: unbound
     image: crazymax/unbound:latest
@@ -286,6 +262,16 @@ services:
     restart: always
     labels:
       - diun.enable=true
+  unbound-redis:
+    image: redis:6-alpine
+    container_name: unbound-redis
+    networks:
+      macvlan0:
+        ipv4_address: ${UNBOUND_REDIS_MACVLAN_IP}
+    command: redis-server --save 60 1
+    volumes:
+      - "${UNBOUND_ROOT_DIR}/redis:/data"
+    restart: always
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
@@ -332,6 +318,35 @@ services:
       - "${PIALERT_ROOT_DIR}/config:/home/pi/pialert/config"
       - "${PIALERT_ROOT_DIR}/db:/home/pi/pialert/db"
       - "${PIHOLE_ROOT_DIR}/pihole-FTL.db:/etc/pihole/pihole-FTL.db"
+    restart: always
+    labels:
+      - diun.enable=true
+  duplicati:
+    container_name: duplicati
+    image: linuxserver/duplicati:latest
+    environment:
+      - TZ
+      - PGID
+      - PUID
+    volumes:
+      - "${DUPLICATI_ROOT_DIR}:/config"
+      - "${DUPLICATI_BACKUPS_DIR}:/backups"
+      - "${DUPLICATI_SOURCE_DIR}:/source"
+    ports:
+      - 8200:8200
+    restart: unless-stopped
+    labels:
+      - diun.enable=true
+  cloudflare_tunnel:
+    container_name: cloudflare-tunnel
+    image: cloudflare/cloudflared:latest
+    network_mode: host
+    command: tunnel run
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - TUNNEL_TOKEN
     restart: always
     labels:
       - diun.enable=true
