@@ -112,7 +112,7 @@ services:
     labels:
       - diun.enable=true
   sonarr:
-    image: linuxserver/sonarr:latest
+    image: linuxserver/sonarr:develop
     container_name: sonarr
     depends_on:
       - qbittorrent
@@ -131,7 +131,7 @@ services:
     labels:
       - diun.enable=true
   radarr:
-    image: linuxserver/radarr:latest
+    image: linuxserver/radarr:develop
     container_name: radarr
     depends_on:
       - qbittorrent
