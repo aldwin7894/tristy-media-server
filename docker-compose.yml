@@ -9,7 +9,6 @@ services:
       - PUID
       - PGID
       - TZ
-      - AVDUMP_MONO=true
     volumes:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
       - "${SHOKO_ROOT_DIR}/Shoko.CLI/webui:/usr/src/app/build/webui"
@@ -175,6 +174,7 @@ services:
       - PGID
       - PUID
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - "${HOMARR_ROOT_DIR}/configs:/app/data/configs"
       - "${HOMARR_ROOT_DIR}/icons:/app/public/icons"
     ports:
@@ -334,7 +334,7 @@ services:
       - "${DUPLICATI_SOURCE_DIR}:/source"
     ports:
       - 8200:8200
-    restart: unless-stopped
+    restart: always
     labels:
       - diun.enable=true
   cloudflare_tunnel:
