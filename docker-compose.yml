@@ -374,8 +374,15 @@ services:
       - PUID
       - DOMAIN=${VAULTWARDEN_DOMAIN}
       - ADMIN_TOKEN=${VAULTWARDEN_ADMIN_TOKEN}
+      - LOG_FILE=/log/vaultwarden.log
+      - LOG_LEVEL=info
+      - ROCKET_CLI_COLORS=false
+      - EXTENDED_LOGGING=true
+      - USE_SYSLOG=true
+      - IP_HEADER=X-Forwarded-For
     volumes:
       - "${VAULTWARDEN_ROOT_DIR}:/data"
+      - /var/log/vaultwarden.log:/log/vaultwarden.log
     ports:
       - 8082:80
     restart: always
