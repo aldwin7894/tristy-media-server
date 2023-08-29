@@ -365,6 +365,22 @@ services:
     restart: always
     labels:
       - diun.enable=true
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - DOMAIN=${VAULTWARDEN_DOMAIN}
+      - ADMIN_TOKEN=${VAULTWARDEN_ADMIN_TOKEN}
+    volumes:
+      - "${VAULTWARDEN_ROOT_DIR}:/data"
+    ports:
+      - 8082:80
+    restart: always
+    labels:
+      - diun.enable=true
 
 networks:
   macvlan0:

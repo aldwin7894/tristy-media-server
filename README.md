@@ -63,6 +63,9 @@ DUPLICATI_ROOT_DIR=""
 DUPLICATI_BACKUP_DIR=""
 DUPLICATI_ROOT_DIR=""
 PIALERT_ROOT_DIR=""
+VAULTWARDEN_ROOT_DIR=""
+VAULTWARDEN_DOMAIN=""
+VAULTWARDEN_ADMIN_TOKEN=""
 
 #======================================================================================
 # UPDATE NOTIFIER
