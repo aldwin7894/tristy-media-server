@@ -86,7 +86,7 @@ services:
       - WEBUI_PORT=8081
     volumes:
       - "${QBITTORRENT_ROOT_DIR}:/config"
-      - "${VIDEO_ROOT_DIR}:/data"
+      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
       - "${MUSIC_DOWNLOAD_DIR}:/data/music-downloads"
     ports:
       - 8081:8081
@@ -124,6 +124,7 @@ services:
     volumes:
       - "${SONARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
+      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
       - "${ANIME_PRIVATE_DIR}:/data/anime/anime-private"
     ports:
       - 8989:8989
@@ -143,6 +144,7 @@ services:
     volumes:
       - "${RADARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
+      - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
       - "${ANIME_MOVIE_PRIVATE_DIR}:/data/anime/anime-movie-private"
     ports:
       - 7878:7878
