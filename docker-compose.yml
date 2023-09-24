@@ -226,7 +226,7 @@ services:
       - TZ
     ports:
       - 9090:9090
-    restart: always
+    restart: unless-stopped
     labels:
       - diun.enable=true
   grafana:
@@ -241,7 +241,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
     ports:
       - 3030:3000
-    restart: always
+    restart: unless-stopped
     labels:
       - diun.enable=true
   unbound:
@@ -270,7 +270,7 @@ services:
     networks:
       macvlan0:
         ipv4_address: ${UNBOUND_REDIS_MACVLAN_IP}
-    command: redis-server --save 60 1
+    command: redis-server --save 60 1 --append
     volumes:
       - "${UNBOUND_ROOT_DIR}/redis:/data"
     restart: always
@@ -305,24 +305,24 @@ services:
     restart: always
     labels:
       - diun.enable=true
-  pi-alert:
-    container_name: pi-alert
-    image: jokobsk/pi.alert:latest
-    network_mode: host
-    environment:
-      - TZ
-      - PGID
-      - PUID
-      - PORT=20211
-      - HOST_USER_ID=${PUID}
-      - HOST_USER_GID=${PGID}
-    volumes:
-      - "${PIALERT_ROOT_DIR}/config:/home/pi/pialert/config"
-      - "${PIALERT_ROOT_DIR}/db:/home/pi/pialert/db"
-      - "${PIHOLE_ROOT_DIR}/pihole-FTL.db:/etc/pihole/pihole-FTL.db"
-    restart: always
-    labels:
-      - diun.enable=true
+  # pi-alert:
+  #   container_name: pi-alert
+  #   image: jokobsk/pi.alert:latest
+  #   network_mode: host
+  #   environment:
+  #     - TZ
+  #     - PGID
+  #     - PUID
+  #     - PORT=20211
+  #     - HOST_USER_ID=${PUID}
+  #     - HOST_USER_GID=${PGID}
+  #   volumes:
+  #     - "${PIALERT_ROOT_DIR}/config:/home/pi/pialert/config"
+  #     - "${PIALERT_ROOT_DIR}/db:/home/pi/pialert/db"
+  #     - "${PIHOLE_ROOT_DIR}/pihole-FTL.db:/etc/pihole/pihole-FTL.db"
+  #   restart: always
+  #   labels:
+  #     - diun.enable=true
   duplicati:
     container_name: duplicati
     image: linuxserver/duplicati:latest
@@ -382,6 +382,8 @@ services:
       - EXTENDED_LOGGING=true
       - USE_SYSLOG=true
       - IP_HEADER=X-Forwarded-For
+      - YUBICO_CLIENT_ID
+      - YUBICO_SECRET_KEY
     volumes:
       - "${VAULTWARDEN_ROOT_DIR}:/data"
       - /var/log/vaultwarden.log:/log/vaultwarden.log
