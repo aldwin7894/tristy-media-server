@@ -270,9 +270,10 @@ services:
     networks:
       macvlan0:
         ipv4_address: ${UNBOUND_REDIS_MACVLAN_IP}
-    command: redis-server --save 60 1 --append
+    command: redis-server --save 60 1
     volumes:
       - "${UNBOUND_ROOT_DIR}/redis:/data"
+      - "${UNBOUND_ROOT_DIR}/redis/conf:/usr/local/etc/redis"
     restart: always
   pihole:
     container_name: pihole
