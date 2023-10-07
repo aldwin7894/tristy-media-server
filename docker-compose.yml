@@ -265,12 +265,12 @@ services:
     labels:
       - diun.enable=true
   unbound-redis:
-    image: redis:6-alpine
+    image: redis:7-alpine
     container_name: unbound-redis
     networks:
       macvlan0:
         ipv4_address: ${UNBOUND_REDIS_MACVLAN_IP}
-    command: redis-server --save 60 1
+    command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
       - "${UNBOUND_ROOT_DIR}/redis:/data"
       - "${UNBOUND_ROOT_DIR}/redis/conf:/usr/local/etc/redis"
