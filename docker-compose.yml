@@ -13,9 +13,9 @@ services:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
       - "${SHOKO_ROOT_DIR}/Shoko.CLI/webui:/usr/src/app/build/webui"
       - "${ANIME_ROOT_DIR}:/mnt"
-      - "${ANIME_IMPORTING_DIR}:/mnt/anime-importing"
-      - "${ANIME_PRIVATE_DIR}:/mnt/anime-private"
-      - "${ANIME_MOVIE_PRIVATE_DIR}:/mnt/anime-movie-private"
+      # - "${ANIME_IMPORTING_DIR}:/mnt/anime-importing"
+      # - "${ANIME_PRIVATE_DIR}:/mnt/anime-private"
+      # - "${ANIME_MOVIE_PRIVATE_DIR}:/mnt/anime-movie-private"
     restart: unless-stopped
     labels:
       - diun.enable=true
@@ -42,8 +42,8 @@ services:
       - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
       - "${MUSIC_ROOT_DIR}:/music"
       - "${VIDEO_ROOT_DIR}:/video"
-      - "${ANIME_PRIVATE_DIR}:/video/anime/anime-private"
-      - "${ANIME_MOVIE_PRIVATE_DIR}:/video/anime/anime-movie-private"
+      # - "${ANIME_PRIVATE_DIR}:/video/anime/anime-private"
+      # - "${ANIME_MOVIE_PRIVATE_DIR}:/video/anime/anime-movie-private"
     restart: unless-stopped
     labels:
       - diun.enable=true
@@ -125,7 +125,7 @@ services:
       - "${SONARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
       - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
-      - "${ANIME_PRIVATE_DIR}:/data/anime/anime-private"
+      # - "${ANIME_PRIVATE_DIR}:/data/anime/anime-private"
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -145,7 +145,7 @@ services:
       - "${RADARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
       - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
-      - "${ANIME_MOVIE_PRIVATE_DIR}:/data/anime/anime-movie-private"
+      # - "${ANIME_MOVIE_PRIVATE_DIR}:/data/anime/anime-movie-private"
     ports:
       - 7878:7878
     restart: unless-stopped
