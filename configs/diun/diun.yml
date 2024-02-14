@@ -1,0 +1,15 @@
+watch:
+  workers: 20
+  schedule: "0 */4 * * *"
+
+providers:
+  docker:
+    watchStopped: true
+
+notif:
+  discord:
+    webhookURL: <replace with webhook url>
+    mentions:
+      - "@everyone"
+    renderFields: true
+    timeout: 10s

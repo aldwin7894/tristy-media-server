@@ -69,7 +69,22 @@ DIUN_DATA_DIR=""
 DIUN_CONFIG_FILE=""
 ```
 
-#### macvlan for PiHole
+#### Run stack in detached mode
+
+```bash
+docker compose up -d
+```
+
+#### Cloudflare Tunnel <a href="https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/">Docs</a>
+For accessing your server on the web without exposing any public port
+
+```bash
+docker compose exec cloudflare_tunnel cloudflared tunnel login
+docker compose exec cloudflare_tunnel cloudflared tunnel create <name>
+```
+
+## PiHole Setup
+#### 1. macvlan for PiHole
 
 ```bash
 sudo docker network create -d macvlan \
@@ -107,15 +122,16 @@ WantedBy=default.target
 
 `sudo systemctl enable pi-vlan`
 
-#### Run stack in detached mode
+#### 2. Set PiHole's Upstream DNS to Unbound IP in:
+- Settings > DNS > Upstream DNS Servers > Custom 1
+- Uncheck other DNS Servers
 
-```bash
-docker-compose up -d
-```
+## Shoko Setup
+- Read the docs <a href="https://docs.shokoanime.com/">here</a>, to setup your local library and have them identified for the metadata, that would be used in Jellyfin
+- Join their discord <a href="https://discord.gg/vpeHDsg">here</a> if you need assistance
 
-#### Cloudflare Tunnel
-
-```bash
-docker compose exec cloudflare_tunnel cloudflared tunnel login
-docker compose exec cloudflare_tunnel cloudflared tunnel create <name>
-```
+## Jellyfin Setup
+- Add `https://raw.githubusercontent.com/ShokoAnime/Shokofin/master/manifest-unstable.json` to jellyfin's plugin repositories
+- Install Shokofin Unstable (Shoko) plugin in the catalog
+- In the plugins page, open shokofin settings and set it up as desired
+- Add your library and make sure only `Shoko` is enabled in all of the `Metadata Downloaders` (to prevent mixed metadata being populated)
