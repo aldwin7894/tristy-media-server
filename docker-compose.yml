@@ -13,9 +13,6 @@ services:
       - "${SHOKO_ROOT_DIR}:/home/shoko/.shoko"
       - "${SHOKO_ROOT_DIR}/Shoko.CLI/webui:/usr/src/app/build/webui"
       - "${ANIME_ROOT_DIR}:/mnt"
-      # - "${ANIME_IMPORTING_DIR}:/mnt/anime-importing"
-      # - "${ANIME_PRIVATE_DIR}:/mnt/anime-private"
-      # - "${ANIME_MOVIE_PRIVATE_DIR}:/mnt/anime-movie-private"
     restart: unless-stopped
     labels:
       - diun.enable=true
@@ -42,8 +39,6 @@ services:
       - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
       - "${MUSIC_ROOT_DIR}:/music"
       - "${VIDEO_ROOT_DIR}:/video"
-      # - "${ANIME_PRIVATE_DIR}:/video/anime/anime-private"
-      # - "${ANIME_MOVIE_PRIVATE_DIR}:/video/anime/anime-movie-private"
     restart: unless-stopped
     labels:
       - diun.enable=true
@@ -125,7 +120,6 @@ services:
       - "${SONARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
       - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
-      # - "${ANIME_PRIVATE_DIR}:/data/anime/anime-private"
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -145,7 +139,6 @@ services:
       - "${RADARR_ROOT_DIR}:/config"
       - "${VIDEO_ROOT_DIR}:/data"
       - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
-      # - "${ANIME_MOVIE_PRIVATE_DIR}:/data/anime/anime-movie-private"
     ports:
       - 7878:7878
     restart: unless-stopped
@@ -307,24 +300,6 @@ services:
     restart: always
     labels:
       - diun.enable=true
-  # pi-alert:
-  #   container_name: pi-alert
-  #   image: jokobsk/pi.alert:latest
-  #   network_mode: host
-  #   environment:
-  #     - TZ
-  #     - PGID
-  #     - PUID
-  #     - PORT=20211
-  #     - HOST_USER_ID=${PUID}
-  #     - HOST_USER_GID=${PGID}
-  #   volumes:
-  #     - "${PIALERT_ROOT_DIR}/config:/home/pi/pialert/config"
-  #     - "${PIALERT_ROOT_DIR}/db:/home/pi/pialert/db"
-  #     - "${PIHOLE_ROOT_DIR}/pihole-FTL.db:/etc/pihole/pihole-FTL.db"
-  #   restart: always
-  #   labels:
-  #     - diun.enable=true
   duplicati:
     container_name: duplicati
     image: linuxserver/duplicati:latest
@@ -391,6 +366,25 @@ services:
       - /var/log/vaultwarden.log:/log/vaultwarden.log
     ports:
       - 8082:80
+    restart: always
+    labels:
+      - diun.enable=true
+  nextcloud:
+    image: linuxserver/nextcloud:latest
+    container_name: nextcloud
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - DOCKER_MODS=linuxserver/mods:nextcloud-memories|linuxserver/mods:nextcloud-mediadc
+      - NEXTCLOUD_ENABLE_DRI_DEVICE=true
+    volumes:
+      - "${NEXTCLOUD_CONFIG_DIR}:/config"
+      - "${NEXTCLOUD_DATA_DIR}:/data"
+    devices:
+      - /dev/dri:/dev/dri
+    ports:
+      - 8083:443
     restart: always
     labels:
       - diun.enable=true
