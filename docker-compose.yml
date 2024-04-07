@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   shoko-server:
     container_name: shoko-server
@@ -35,8 +34,8 @@ services:
       - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
     volumes:
       - "${JELLYFIN_ROOT_DIR}:/config"
-      - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
-      - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
+      # - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
+      # - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
       - "${MUSIC_ROOT_DIR}:/music"
       - "${VIDEO_ROOT_DIR}:/video"
     restart: unless-stopped
@@ -376,8 +375,9 @@ services:
       - PUID
       - PGID
       - TZ
-      - DOCKER_MODS=linuxserver/mods:nextcloud-memories|linuxserver/mods:nextcloud-mediadc
+      - DOCKER_MODS=linuxserver/mods:universal-package-install|linuxserver/mods:nextcloud-memories|linuxserver/mods:nextcloud-mediadc
       - NEXTCLOUD_ENABLE_DRI_DEVICE=true
+      - INSTALL_PACKAGES=libva|libva-intel-driver|intel-media-driver|mesa-va-gallium
     volumes:
       - "${NEXTCLOUD_CONFIG_DIR}:/config"
       - "${NEXTCLOUD_DATA_DIR}:/data"
