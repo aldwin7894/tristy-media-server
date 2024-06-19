@@ -315,7 +315,7 @@ services:
     restart: always
     labels:
       - diun.enable=true
-  cloudflare_tunnel:
+  cloudflare-tunnel:
     container_name: cloudflare-tunnel
     image: cloudflare/cloudflared:latest
     network_mode: host
@@ -368,9 +368,23 @@ services:
     restart: always
     labels:
       - diun.enable=true
+  nextcloud-imaginary:
+    image: nextcloud/aio-imaginary:develop
+    container_name: nextcloud-imaginary
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    ports:
+      - 8084:9000
+    restart: always
+    labels:
+      - diun.enable=true
   nextcloud:
-    image: linuxserver/nextcloud:latest
+    image: linuxserver/nextcloud:develop
     container_name: nextcloud
+    depends_on:
+      - nextcloud-imaginary
     environment:
       - PUID
       - PGID
