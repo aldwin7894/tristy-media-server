@@ -132,7 +132,7 @@ WantedBy=default.target
 - Join their discord <a href="https://discord.gg/vpeHDsg">here</a> if you need assistance
 
 ## Jellyfin Setup
-- Add `https://raw.githubusercontent.com/ShokoAnime/Shokofin/master/manifest-unstable.json` to jellyfin's plugin repositories
-- Install Shokofin Unstable (Shoko) plugin in the catalog
-- In the plugins page, open shokofin settings and set it up as desired
+- Add `https://raw.githubusercontent.com/ShokoAnime/Shokofin/metadata/dev/manifest.json` to jellyfin's plugin repositories
+- Install latest Shokofin Unstable (Shoko) plugin in the catalog
+- In the plugins page, open shokofin settings and set it up as desired (Enable Virtual File System if you don't want to organize your files like [how](https://jellyfin.org/docs/general/server/media/shows/) Jellyfin wants it, Shokofin will do that for you)
 - Add your library and make sure only `Shoko` is enabled in all of the `Metadata Downloaders` (to prevent mixed metadata being populated)
