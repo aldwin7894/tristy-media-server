@@ -31,7 +31,7 @@ services:
       - PUID
       - PGID
       - TZ
-      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
+      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel|ghcr.io/jumoog/intro-skipper
     volumes:
       - "${JELLYFIN_ROOT_DIR}:/config"
       # - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
@@ -391,7 +391,7 @@ services:
       - TZ
       - DOCKER_MODS=linuxserver/mods:universal-package-install|linuxserver/mods:nextcloud-memories|linuxserver/mods:nextcloud-mediadc
       - NEXTCLOUD_ENABLE_DRI_DEVICE=true
-      - INSTALL_PACKAGES=libva|libva-intel-driver|intel-media-driver|mesa-va-gallium
+      - INSTALL_PACKAGES=libva|libva-utils|libva-vdpau-driver|libva-intel-driver|intel-media-driver|mesa-va-gallium
     volumes:
       - "${NEXTCLOUD_CONFIG_DIR}:/config"
       - "${NEXTCLOUD_DATA_DIR}:/data"
