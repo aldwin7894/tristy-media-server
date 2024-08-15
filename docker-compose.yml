@@ -395,6 +395,7 @@ services:
     volumes:
       - "${NEXTCLOUD_CONFIG_DIR}:/config"
       - "${NEXTCLOUD_DATA_DIR}:/data"
+      - ./configs/nextcloud/scripts:/custom-cont-init.d:ro
     devices:
       - /dev/dri:/dev/dri
     ports:
