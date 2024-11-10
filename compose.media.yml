@@ -87,3 +87,37 @@ services:
     restart: always
     labels:
       - diun.enable=true
+  netdata:
+    container_name: netdata
+    image: netdata/netdata:stable
+    pid: host
+    network_mode: host
+    environment:
+      - TZ
+      - PGID=998
+      - NETDATA_CLAIM_TOKEN
+      - NETDATA_CLAIM_URL
+      - NETDATA_CLAIM_ROOMS
+    volumes:
+      - "${NETDATA_CONFIG_DIR}:/etc/netdata"
+      - "${NETDATA_LIB_DIR}:/var/lib/netdata"
+      - "${NETDATA_CACHE_DIR}:/var/cache/netdata"
+      - "${UNBOUND_ROOT_DIR}/unbound:/opt/unbound/etc/unbound"
+      - /:/host/root:ro,rslave
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-releaase:/host/etc/os-release:ro
+      - /var/log:/host/var/log:ro
+      - /run/dbus:/run/dbus:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    restart: unless-stopped
+    labels:
+      - diun.enable=true
