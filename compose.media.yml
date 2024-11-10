@@ -2,8 +2,8 @@ services:
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin:latest
-    depends_on:
-      - shoko-server
+    # depends_on:
+    #   - shoko-server
     ports:
       - 1900:1900/udp
       - 7359:7359/udp
