@@ -15,44 +15,6 @@ services:
     restart: unless-stopped
     labels:
       - diun.enable=true
-  jellyfin:
-    container_name: jellyfin
-    image: linuxserver/jellyfin:latest
-    depends_on:
-      - shoko-server
-    ports:
-      - 1900:1900/udp
-      - 7359:7359/udp
-      - 8000:8000
-      - 8096:8096
-    devices:
-      - /dev/dri:/dev/dri
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel|ghcr.io/jumoog/intro-skipper
-    volumes:
-      - "${JELLYFIN_ROOT_DIR}:/config"
-      # - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
-      # - "${JELLYFIN_FFMPEG_DIR}:/usr/lib/jellyfin-ffmpeg"
-      - "${MUSIC_ROOT_DIR}:/music"
-      - "${VIDEO_ROOT_DIR}:/video"
-    restart: unless-stopped
-    labels:
-      - diun.enable=true
-  jellyfin-vue:
-    container_name: jellyfin-vue
-    image: jellyfin/jellyfin-vue:unstable
-    ports:
-      - 8095:80
-    environment:
-      - PUID
-      - PGID
-      - TZ
-    restart: unless-stopped
-    labels:
-      - diun.enable=true
   navidrome:
     container_name: navidrome
     image: deluan/navidrome:develop
@@ -352,41 +314,6 @@ services:
       - /var/log/vaultwarden.log:/log/vaultwarden.log
     ports:
       - 8082:80
-    restart: always
-    labels:
-      - diun.enable=true
-  nextcloud-imaginary:
-    image: nextcloud/aio-imaginary:develop
-    container_name: nextcloud-imaginary
-    environment:
-      - PUID
-      - PGID
-      - TZ
-    ports:
-      - 8084:9000
-    restart: always
-    labels:
-      - diun.enable=true
-  nextcloud:
-    image: linuxserver/nextcloud:develop
-    container_name: nextcloud
-    depends_on:
-      - nextcloud-imaginary
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - DOCKER_MODS=linuxserver/mods:universal-package-install|linuxserver/mods:nextcloud-memories|linuxserver/mods:nextcloud-mediadc
-      - NEXTCLOUD_ENABLE_DRI_DEVICE=true
-      - INSTALL_PACKAGES=libva|libva-utils|libva-vdpau-driver|libva-intel-driver|intel-media-driver|mesa-va-gallium
-    volumes:
-      - "${NEXTCLOUD_CONFIG_DIR}:/config"
-      - "${NEXTCLOUD_DATA_DIR}:/data"
-      - ./configs/nextcloud/scripts:/custom-cont-init.d:ro
-    devices:
-      - /dev/dri:/dev/dri
-    ports:
-      - 8083:443
     restart: always
     labels:
       - diun.enable=true
