@@ -38,7 +38,7 @@ services:
     labels:
       - diun.enable=true
   nextcloud-imaginary:
-    image: nextcloud/aio-imaginary:develop
+    image: nextcloud/aio-imaginary:latest
     container_name: nextcloud-imaginary
     environment:
       - PUID
@@ -50,7 +50,7 @@ services:
     labels:
       - diun.enable=true
   nextcloud:
-    image: linuxserver/nextcloud:develop
+    image: linuxserver/nextcloud:latest
     container_name: nextcloud
     depends_on:
       - nextcloud-imaginary
