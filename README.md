@@ -67,6 +67,16 @@ NEXTCLOUD_DATA_DIR=""
 #======================================================================================
 DIUN_DATA_DIR=""
 DIUN_CONFIG_FILE=""
+
+#======================================================================================
+# GLUETUN/VPN CONFIG
+#======================================================================================
+GLUETUN_ROOT_DIR=""
+WIREGUARD_PRIVATE_KEY=""
+WIREGUARD_ADDRESSES=""
+WIREGUARD_PRESHARED_KEY=""
+SERVER_REGIONS=""
+FIREWALL_VPN_INPUT_PORTS=""
 ```
 
 #### Run stack in detached mode

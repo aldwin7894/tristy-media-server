@@ -35,6 +35,8 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    # COMMENT OUT network_mode IF GLUETUN IS NOT NEEDED
+    network_mode: container:windscribe-gluetun
     environment:
       - TZ
       - PGID
@@ -44,10 +46,11 @@ services:
       - "${QBITTORRENT_ROOT_DIR}:/config"
       - "${DOWNLOAD_ROOT_DIR}:/data/downloads"
       - "${MUSIC_DOWNLOAD_DIR}:/data/music-downloads"
-    ports:
-      - 8081:8081
-      - 6881:6881
-      - 6881:6881/udp
+    # UNCOMMENT IF GLUETUN IS NOT NEEDED
+    # ports:
+    #   - 8081:8081
+    #   - 6881:6881
+    #   - 6881:6881/udp
     restart: unless-stopped
     labels:
       - diun.enable=true
@@ -314,6 +317,38 @@ services:
       - /var/log/vaultwarden.log:/log/vaultwarden.log
     ports:
       - 8082:80
+    restart: always
+    labels:
+      - diun.enable=true
+  # COMMENT OUT IF GLUETUN IS NOT NEEDED
+  windscribe-gluetun:
+    image: qmcgaw/gluetun
+    container_name: windscribe-gluetun
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - WIREGUARD_PRIVATE_KEY
+      - WIREGUARD_ADDRESSES
+      - WIREGUARD_PRESHARED_KEY
+      - SERVER_REGIONS
+      - FIREWALL_VPN_INPUT_PORTS
+      - VPN_SERVICE_PROVIDER=windscribe
+      - VPN_TYPE=wireguard
+      - UPDATER_PERIOD=24h
+    volumes:
+      - "${GLUETUN_ROOT_DIR}:/gluetun"
+    ports:
+      - 8888:8888/tcp
+      - 8388:8388/tcp
+      - 8388:8388/udp
+      - 8081:8081
+      - 6881:6881
+      - 6881:6881/udp
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
     restart: always
     labels:
       - diun.enable=true
