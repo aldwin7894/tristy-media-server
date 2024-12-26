@@ -35,8 +35,11 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    # COMMENT OUT network_mode IF GLUETUN IS NOT NEEDED
-    network_mode: container:windscribe-gluetun
+    # COMMENT OUT IF GLUETUN IS NOT NEEDED
+    network_mode: container:wireguard-gluetun
+    depends_on:
+      - wireguard-gluetun
+    # END
     environment:
       - TZ
       - PGID
@@ -321,9 +324,9 @@ services:
     labels:
       - diun.enable=true
   # COMMENT OUT IF GLUETUN IS NOT NEEDED
-  windscribe-gluetun:
+  wireguard-gluetun:
     image: qmcgaw/gluetun
-    container_name: windscribe-gluetun
+    container_name: wireguard-gluetun
     environment:
       - TZ
       - PGID
@@ -333,7 +336,7 @@ services:
       - WIREGUARD_PRESHARED_KEY
       - SERVER_REGIONS
       - FIREWALL_VPN_INPUT_PORTS
-      - VPN_SERVICE_PROVIDER=windscribe
+      - VPN_SERVICE_PROVIDER
       - VPN_TYPE=wireguard
       - UPDATER_PERIOD=24h
     volumes:
@@ -352,6 +355,7 @@ services:
     restart: always
     labels:
       - diun.enable=true
+  # END
 
 networks:
   macvlan0:
