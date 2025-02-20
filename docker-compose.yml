@@ -18,6 +18,7 @@ services:
   navidrome:
     container_name: navidrome
     image: deluan/navidrome:develop
+    user: "${PUID}:${PGID}"
     environment:
       - TZ
       - PGID
@@ -250,12 +251,16 @@ services:
       - TZ
       - PIHOLE_UID=${PUID}
       - PIHOLE_GID=${PGID}
-      - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
+      - FTLCONF_webserver_api_password=${PIHOLE_WEBPASSWORD}
+      - FTLCONF_dns_listeningMode=all
       - ServerIP=${PIHOLE_MACVLAN_IP}
       - VIRTUAL_HOST=pihole.local
     volumes:
       - "${PIHOLE_ROOT_DIR}:/etc/pihole"
-      - "${PIHOLE_DNSMASQ_DIR}:/etc/dnsmasq.d"
+    cap_add:
+      - NET_ADMIN
+      - CAP_SYS_NICE
+      - CAP_SYS_TIME
     restart: always
     labels:
       - diun.enable=true
@@ -330,7 +335,7 @@ services:
       - diun.enable=true
   # COMMENT OUT IF GLUETUN IS NOT NEEDED
   wireguard-gluetun:
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:latest
     container_name: wireguard-gluetun
     environment:
       - TZ
