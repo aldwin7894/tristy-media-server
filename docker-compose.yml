@@ -119,21 +119,19 @@ services:
       - diun.enable=true
   homarr:
     container_name: homarr
-    image: ghcr.io/ajnart/homarr:latest
+    image: ghcr.io/homarr-labs/homarr:latest
     environment:
       - TZ
-      - PGID
-      - PUID
+      - SECRET_ENCRYPTION_KEY
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - "${HOMARR_ROOT_DIR}/configs:/app/data/configs"
-      - "${HOMARR_ROOT_DIR}/icons:/app/public/icons"
-      - "${HOMARR_ROOT_DIR}/data:/data"
+      - "${HOMARR_ROOT_DIR}:/appdata"
     ports:
       - 7575:7575
     restart: unless-stopped
     labels:
       - diun.enable=true
+
   netdata:
     container_name: netdata
     image: netdata/netdata:stable
@@ -350,6 +348,7 @@ services:
       - VPN_TYPE=wireguard
       - UPDATER_PERIOD=24h
       - WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL=25s
+      - WIREGUARD_IMPLEMENTATION=kernelspace
     volumes:
       - "${GLUETUN_ROOT_DIR}:/gluetun"
     ports:
