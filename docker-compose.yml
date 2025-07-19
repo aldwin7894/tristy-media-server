@@ -36,6 +36,8 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    depends_on:
+      - deunhealth
     # COMMENT OUT IF GLUETUN IS NOT NEEDED
     network_mode: service:wireguard-gluetun
     # END
@@ -56,7 +58,7 @@ services:
     #   - 6881:6881/udp
     restart: unless-stopped
     healthcheck:
-      test: "curl -sf https://example.com  || exit 1"
+      test: "curl -sf https://google.com  || exit 1"
       interval: 1m
       timeout: 10s
       retries: 1
@@ -131,7 +133,6 @@ services:
     restart: unless-stopped
     labels:
       - diun.enable=true
-
   netdata:
     container_name: netdata
     image: netdata/netdata:stable
@@ -163,36 +164,6 @@ services:
       - SYS_ADMIN
     security_opt:
       - apparmor:unconfined
-    restart: unless-stopped
-    labels:
-      - diun.enable=true
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:latest
-    depends_on:
-      - netdata
-    volumes:
-      - "${PROMETHEUS_ROOT_DIR}/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-      - "${PROMETHEUS_ROOT_DIR}:/prometheus"
-    environment:
-      - TZ
-    ports:
-      - 9090:9090
-    restart: unless-stopped
-    labels:
-      - diun.enable=true
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:latest
-    depends_on:
-      - prometheus
-    volumes:
-      - "${GRAFANA_ROOT_DIR}:/var/lib/grafana"
-    environment:
-      - TZ
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-    ports:
-      - 3030:3000
     restart: unless-stopped
     labels:
       - diun.enable=true
@@ -349,6 +320,9 @@ services:
       - UPDATER_PERIOD=24h
       - WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL=25s
       - WIREGUARD_IMPLEMENTATION=kernelspace
+      - FIREWALL_OUTBOUND_SUBNETS=${PIHOLE_MACVLAN_SUBNET}
+      - DNS_ADDRESS=${PIHOLE_MACVLAN_IP}
+      - DOT=off
     volumes:
       - "${GLUETUN_ROOT_DIR}:/gluetun"
     ports:
