@@ -37,8 +37,12 @@ services:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
     depends_on:
-      - deunhealth
+      deunhealth:
+        condition: service_started
     # COMMENT OUT IF GLUETUN IS NOT NEEDED
+      wireguard-gluetun:
+        condition: service_healthy
+        restart: true
     network_mode: service:wireguard-gluetun
     # END
     environment:
@@ -323,6 +327,10 @@ services:
       - FIREWALL_OUTBOUND_SUBNETS=${PIHOLE_MACVLAN_SUBNET}
       - DNS_ADDRESS=${PIHOLE_MACVLAN_IP}
       - DOT=off
+      - DOT_CACHING=off
+      - DNS_UPDATE_PERIOD=0
+      - HEALTH_TARGET_ADDRESS=google.com:443
+      - HEALTH_SUCCESS_WAIT_DURATION=60s
     volumes:
       - "${GLUETUN_ROOT_DIR}:/gluetun"
     ports:
