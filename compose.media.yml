@@ -11,11 +11,13 @@ services:
       - 8096:8096
     devices:
       - /dev/dri:/dev/dri
+    group_add:
+      - 106
     environment:
       - PUID
       - PGID
       - TZ
-      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel|ghcr.io/intro-skipper/intro-skipper-docker-mod
+      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
     volumes:
       - "${JELLYFIN_ROOT_DIR}:/config"
       # - "${JELLYFIN_WEB_DIR}:/usr/share/jellyfin/web"
@@ -37,9 +39,29 @@ services:
     restart: unless-stopped
     labels:
       - diun.enable=true
+  nextcloud-harp:
+    image: ghcr.io/nextcloud/nextcloud-appapi-harp:release
+    container_name: nextcloud-harp
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - HP_SHARED_KEY
+      - NC_INSTANCE_URL
+    volumes:
+      - "${NEXTCLOUD_CONFIG_DIR}/certs:/certs"
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8780:8780
+      - 8782:8782
+    restart: always
+    labels:
+      - diun.enable=true
   nextcloud-imaginary:
     image: nextcloud/aio-imaginary:latest
     container_name: nextcloud-imaginary
+    cap_add:
+      - SYS_NICE
     environment:
       - PUID
       - PGID

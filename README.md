@@ -62,6 +62,8 @@ VAULTWARDEN_DOMAIN=""
 VAULTWARDEN_ADMIN_TOKEN=""
 NEXTCLOUD_CONFIG_DIR=""
 NEXTCLOUD_DATA_DIR=""
+HP_SHARED_KEY=""                  # HARP FOR APPAPI SHARED KEY
+NC_INSTANCE_URL=""                # HARP FOR APPAPI NEXTCLOUD INSTANCE URL
 
 #======================================================================================
 # UPDATE NOTIFIER
