@@ -36,10 +36,8 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    depends_on:
-      deunhealth:
-        condition: service_started
     # COMMENT OUT IF GLUETUN IS NOT NEEDED
+    depends_on:
       wireguard-gluetun:
         condition: service_healthy
         restart: true
@@ -329,7 +327,7 @@ services:
       - DOT=off
       - DOT_CACHING=off
       - DNS_UPDATE_PERIOD=0
-      - HEALTH_TARGET_ADDRESS=google.com:443
+      - HEALTH_TARGET_ADDRESSES=google.com:443
       - HEALTH_SUCCESS_WAIT_DURATION=60s
     volumes:
       - "${GLUETUN_ROOT_DIR}:/gluetun"
@@ -351,12 +349,17 @@ services:
   deunhealth:
     image: qmcgaw/deunhealth:latest
     container_name: deunhealth
+    network_mode: none
+    depends_on:
+      qbittorrent:
+        condition: service_started
     environment:
       - TZ
       - PGID
       - PUID
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
 
 networks:
   macvlan0:
