@@ -34,6 +34,7 @@ QBITTORRENT_ROOT_DIR=""         # QBITTORRENT ROOT DIR
 TORRENTING_PORT=""              # QBITTORRENT PORT FORWARD
 HOMARR_ROOT_DIR=""              # HOMARR ROOT DIR
 SECRET_ENCRYPTION_KEY=""        # HOMARR ENCRYPTION KEY
+DISPATCHARR_DATA_DIR=""         # DISPATCHARR DATA DIR
 
 #======================================================================================
 # MONITORING AND UTILITIES

@@ -184,21 +184,24 @@ services:
     volumes:
       - "${UNBOUND_ROOT_DIR}/config:/config:ro"
       - "${UNBOUND_ROOT_DIR}/unbound:/var/run/unbound"
+      - unbound_redis_socket:/var/run/redis
     healthcheck:
       disable: true
     restart: always
     labels:
       - diun.enable=true
   unbound-redis:
-    image: redis:7-alpine
+    image: redis:alpine
     container_name: unbound-redis
     networks:
       macvlan0:
         ipv4_address: ${UNBOUND_REDIS_MACVLAN_IP}
-    command: redis-server /usr/local/etc/redis/redis.conf
+    command: |
+      /bin/sh -c "mkdir -p /var/run/redis && redis-server /usr/local/etc/redis/redis.conf"
     volumes:
       - "${UNBOUND_ROOT_DIR}/redis:/data"
       - "${UNBOUND_ROOT_DIR}/redis/conf:/usr/local/etc/redis"
+      - unbound_redis_socket:/var/run/redis
     restart: always
   pihole:
     container_name: pihole
@@ -322,10 +325,10 @@ services:
       - UPDATER_PERIOD=24h
       - WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL=25s
       - WIREGUARD_IMPLEMENTATION=kernelspace
-      - FIREWALL_OUTBOUND_SUBNETS=${PIHOLE_MACVLAN_SUBNET}
-      - DNS_ADDRESS=${PIHOLE_MACVLAN_IP}
+      - FIREWALL_OUTBOUND_SUBNETS="${PIHOLE_MACVLAN_IP}/32"
+      - DNS_UPSTREAM_PLAIN_ADDRESSES="${PIHOLE_MACVLAN_IP}:53"
       - DOT=off
-      - DOT_CACHING=off
+      - DNS_CACHING=off
       - DNS_UPDATE_PERIOD=0
       - HEALTH_TARGET_ADDRESSES=google.com:443
       - HEALTH_SUCCESS_WAIT_DURATION=60s
@@ -364,3 +367,6 @@ services:
 networks:
   macvlan0:
     external: true
+
+volumes:
+  unbound_redis_socket:
