@@ -20,7 +20,7 @@ VIDEO_ROOT_DIR=""               # VIDEO ROOT DIR
 ANIME_ROOT_DIR=""               # ANIME ROOT DIR CONTAINING DROP SOURCE AND DESTINATION
 
 #======================================================================================
-# MEDIA SERVER, METADATA AND DOWNLOADER
+# MEDIA SERVER, METADATA, IPTV AND DOWNLOADER
 #======================================================================================
 JELLYFIN_ROOT_DIR=""            # JELLYFIN ROOT DIR
 JELLYFIN_WEB_DIR=""             # TEST PRE-RELEASE WEB
@@ -65,6 +65,7 @@ NEXTCLOUD_CONFIG_DIR=""
 NEXTCLOUD_DATA_DIR=""
 HP_SHARED_KEY=""                  # HARP FOR APPAPI SHARED KEY
 NC_INSTANCE_URL=""                # HARP FOR APPAPI NEXTCLOUD INSTANCE URL
+TS_AUTHKEY=""                     # TAILSCALE AUTH KEY
 
 #======================================================================================
 # UPDATE NOTIFIER
@@ -103,8 +104,8 @@ docker compose exec cloudflare_tunnel cloudflared tunnel create <name>
 ```bash
 sudo docker network create -d macvlan \
         --subnet=${HOST_IP}/24 --gateway=${GATEWAY_IP} \
-        -ip-range ${PIHOLE_MACVLAN_IP}/28 \
-        -o parent=eno1 \
+        --ip-range ${PIHOLE_MACVLAN_IP}/28 \
+        -o parent=${INTERFACE} \
         --aux-address="myserver=${PIHOLE_MACVLAN_AUX_IP}" \
         macvlan0
 ```
@@ -114,7 +115,7 @@ sudo docker network create -d macvlan \
 
 #!/usr/bin/env bash
 ip link add macvlan-shim link eno1 type macvlan mode bridge
-ip addr add ${PIHOLE_MACVLAN_AUX_IP}/28 dev macvlan-shim
+ip addr add ${PIHOLE_MACVLAN_AUX_IP}/32 dev macvlan-shim
 ip link set macvlan-shim up
 ifconfig macvlan-shim
 ```

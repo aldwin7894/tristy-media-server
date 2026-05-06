@@ -325,11 +325,12 @@ services:
       - UPDATER_PERIOD=24h
       - WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL=25s
       - WIREGUARD_IMPLEMENTATION=kernelspace
-      - FIREWALL_OUTBOUND_SUBNETS="${PIHOLE_MACVLAN_IP}/32"
-      - DNS_UPSTREAM_PLAIN_ADDRESSES="${PIHOLE_MACVLAN_IP}:53"
-      - DOT=off
-      - DNS_CACHING=off
-      - DNS_UPDATE_PERIOD=0
+      # - FIREWALL_OUTBOUND_SUBNETS=${PIHOLE_MACVLAN_IP}/32
+      # - DNS_UPSTREAM_PLAIN_ADDRESSES=${PIHOLE_MACVLAN_IP}:53
+      - DNS_UPSTREAM_RESOLVER_TYPE=doh
+      - DNS_UPSTREAM_RESOLVERS="cloudflare,google,libredns,quad9 unsecured"
+      - DNS_CACHING=on
+      - DNS_UPDATE_PERIOD=24h
       - HEALTH_TARGET_ADDRESSES=google.com:443
       - HEALTH_SUCCESS_WAIT_DURATION=60s
     volumes:
@@ -363,6 +364,31 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
+    labels:
+      - diun.enable=true
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: tailscale
+    hostname: "${TAILSCALE_HOSTNAME:-tristy-tailscale}"
+    network_mode: host
+    environment:
+      - TZ
+      - PGID
+      - PUID
+      - TS_AUTHKEY
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - "${TAILSCALE_ROOT_DIR}:/var/lib/tailscale"
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - net_raw
+    restart: always
+    labels:
+      - diun.enable=true
 
 networks:
   macvlan0:
