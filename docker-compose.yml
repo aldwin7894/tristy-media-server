@@ -28,7 +28,7 @@ services:
       - 8097:4533
     volumes:
       - "${NAVIDROME_ROOT_DIR}:/data"
-      - "${MUSIC_ROOT_DIR}:/music:ro"
+      - "${MUSIC_ROOT_DIR}:/music"
       - "${PODCAST_ROOT_DIR}:/podcasts:ro"
     restart: unless-stopped
     labels:
@@ -318,15 +318,17 @@ services:
       - WIREGUARD_PRIVATE_KEY
       - WIREGUARD_ADDRESSES
       - WIREGUARD_PRESHARED_KEY
-      - SERVER_REGIONS
-      - FIREWALL_VPN_INPUT_PORTS
-      - VPN_SERVICE_PROVIDER
-      - VPN_TYPE=wireguard
       - UPDATER_PERIOD=24h
       - WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL=25s
       - WIREGUARD_IMPLEMENTATION=kernelspace
-      # - FIREWALL_OUTBOUND_SUBNETS=${PIHOLE_MACVLAN_IP}/32
-      # - DNS_UPSTREAM_PLAIN_ADDRESSES=${PIHOLE_MACVLAN_IP}:53
+      - FIREWALL_VPN_INPUT_PORTS
+      - VPN_SERVICE_PROVIDER
+      - VPN_TYPE=openvpn
+      - OPENVPN_CUSTOM_CONFIG
+      - OPENVPN_USER
+      - OPENVPN_PASSWORD
+      # - VPN_TYPE=wireguard
+      # - SERVER_REGIONS
       - DNS_UPSTREAM_RESOLVER_TYPE=doh
       - DNS_UPSTREAM_RESOLVERS="cloudflare,google,libredns,quad9 unsecured"
       - DNS_CACHING=on
